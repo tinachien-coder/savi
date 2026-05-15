@@ -662,6 +662,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
     </div>
 
     <div style="margin-top:auto;padding:10px 0">
+      <!-- STS Signup highlighted block -->
+      <div style="margin:0 10px 10px;background:linear-gradient(135deg,#1E3A8A 0%,#2563EB 100%);border-radius:9px;padding:11px 13px;cursor:pointer;transition:opacity .15s" onclick="window.open('sts-signup.html','_blank')" title="Open Social Total Solution Signup Tool">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#BFDBFE;margin-bottom:4px">Social Total Solution</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;font-weight:600;color:#fff">🏨 STS Signup</span>
+          <span style="font-size:11px;color:#93C5FD;font-weight:600">↗</span>
+        </div>
+        <div style="font-size:10px;color:#93C5FD;margin-top:3px">Hotel enrollment · Precheck · Dashboard</div>
+      </div>
       <div class="sb-label">Quick Links</div>
       <div class="sb-item" onclick="window.open('kol-ext.html','_blank')">
         <span class="sb-dot dot-g"></span>
@@ -681,11 +690,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
       <div class="sb-item" onclick="window.open('kol-ambassador.html','_blank')">
         <span class="sb-dot" style="background:#F59E0B"></span>
         <span>Ambassador Form</span>
-        <span style="font-size:11px;color:var(--txt2);margin-left:auto">↗</span>
-      </div>
-      <div class="sb-item" onclick="window.open('sts-signup.html','_blank')">
-        <span class="sb-dot" style="background:#2563EB"></span>
-        <span>STS Signup</span>
         <span style="font-size:11px;color:var(--txt2);margin-left:auto">↗</span>
       </div>
     </div>
@@ -860,17 +864,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
         <div class="pg-header-wrap">
           <div>
             <div class="pg-title">📊 Performance Tracking</div>
-            <div class="pg-sub">Track BL% by market and quarter, and export campaign data for Metabase / SQL pvar uplift analysis.</div>
+            <div class="pg-sub">BL% by country &amp; quarter · Campaign table for Metabase / SQL pvar uplift analysis.</div>
           </div>
         </div>
 
-        <!-- ── BL% Overview ── -->
-        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-            <div style="font-size:14px;font-weight:600;color:var(--navy)">📈 BL% by Country & Quarter</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-              <!-- Country checkboxes -->
-              <span style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px">Market:</span>
+        <!-- ── KPI Cards row ── -->
+        <div id="perf-kpi-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px"></div>
+
+        <!-- ── BL% by Country & Quarter ── -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px">
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">📈 BL% by Country &amp; Quarter</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              <span style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px">Country:</span>
               <label id="perf-chk-TW" style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:12px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:#fff;user-select:none">
                 <input type="checkbox" value="TW" checked onchange="renderPerfBL()" style="accent-color:#2563EB"> TW
               </label>
@@ -886,7 +892,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
               <label id="perf-chk-MY" style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:12px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:#fff;user-select:none">
                 <input type="checkbox" value="MY" onchange="renderPerfBL()" style="accent-color:#2563EB"> MY
               </label>
-
               <span style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-left:6px">Quarter:</span>
               <select id="perf-q-from" onchange="renderPerfBL()" style="border:1px solid var(--border);border-radius:6px;font-size:12px;padding:4px 8px;font-family:inherit;background:#fff">
                 <option value="2026Q1">2026 Q1</option>
@@ -903,19 +908,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
               </select>
             </div>
           </div>
-          <div id="perf-bl-table"></div>
+          <div style="padding:14px 18px" id="perf-bl-table"></div>
         </div>
 
-        <!-- ── Campaign SQL Table ── -->
-        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+        <!-- ── Campaign Table ── -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px">
             <div>
-              <div style="font-size:14px;font-weight:600;color:var(--navy)">🗃 Campaign Table — for SQL / Metabase pvar uplift</div>
-              <div style="font-size:11px;color:var(--txt2);margin-top:3px">Only campaigns with confirmed start dates are shown. End date = start date + 13 days.</div>
+              <div style="font-size:13px;font-weight:600;color:var(--navy)">🗃 Campaign Table — for SQL / Metabase pvar uplift</div>
+              <div style="font-size:11px;color:var(--txt2);margin-top:3px">During: start date → +13d end date &nbsp;|&nbsp; Pre: start date −14d → day before during starts</div>
             </div>
             <button onclick="copyCampaignCSV()" style="display:flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:7px;padding:7px 13px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;background:#fff;color:var(--txt)">📋 Copy as CSV</button>
           </div>
-          <div id="perf-campaign-table"></div>
+          <div style="padding:0" id="perf-campaign-table"></div>
         </div>
       </div><!-- /performance -->
 
@@ -1027,6 +1032,7 @@ function navigate(screen){
   if(screen==='performance'){
     renderPerfBL();
     renderCampaignTable();
+    // KPI cards rendered inside renderPerfBL
   }
 }
 
@@ -1496,39 +1502,66 @@ function dateToQuarter(dateStr){
   const q = Math.ceil((d.getMonth()+1)/3);
   return `${y}Q${q}`;
 }
-
 function quarterInRange(qStr, fromQ, toQ){
   if(!qStr) return false;
-  // Compare lexicographically — works for YYYYQ# format
   return qStr >= fromQ && qStr <= toQ;
 }
+function addDays(dateStr, n){
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0,10);
+}
 
-// Build enriched campaign records from matched plans + confirmed details
+// Build enriched campaign records
 function getCampaignRecords(){
   const plans = buildMatchedPlans();
   const records = [];
   plans.forEach(p => {
     if(p.status !== 'matched') return;
     const confirmed = matchConfirmedDetails[p.id] || {};
-    const startDate = confirmed.deadline || '';
-    if(!startDate) return; // only include if start date confirmed
-    // Compute end date = start + 13 days
-    const sd = new Date(startDate);
-    const ed = new Date(sd);
-    ed.setDate(ed.getDate() + 13);
-    const endDate = ed.toISOString().slice(0,10);
+    const duringStart = confirmed.deadline || '';
+    if(!duringStart) return;
+    const duringEnd   = addDays(duringStart, 13);
+    const preEnd      = addDays(duringStart, -1);
+    const preStart    = addDays(duringStart, -14);
     records.push({
-      region: p.region || '—',
-      hid:    p.hid    || '—',
-      mm:     p.mmEmail ? p.mmEmail.split('@')[0] : (p.region ? p.region + ' MM' : '—'),
-      hotel:  p.hotel  || '—',
-      bl:     p.bl     || '—',
-      startDate,
-      endDate,
-      quarter: dateToQuarter(startDate),
+      country:    p.region || '—',
+      hid:        p.hid    || '—',
+      mm:         p.mmEmail ? p.mmEmail.split('@')[0] : (p.region || '—'),
+      hotel:      p.hotel  || '—',
+      bl:         p.bl     || '—',
+      preStart,
+      preEnd,
+      duringStart,
+      duringEnd,
+      quarter:    dateToQuarter(duringStart),
     });
   });
   return records;
+}
+
+// ── KPI Cards ──────────────────────────────────────────────
+function renderPerfKPIs(records, selectedCountries, fromQ, toQ){
+  const filtered = records.filter(r => selectedCountries.includes(r.country) && quarterInRange(r.quarter, fromQ, toQ));
+  const totalCampaigns = filtered.length;
+  const totalBL = filtered.reduce((s,r) => s + (parseFloat(r.bl)||0), 0);
+  const countryCount = new Set(filtered.map(r=>r.country)).size;
+  const quarters = [...new Set(filtered.map(r=>r.quarter).filter(Boolean))].sort();
+
+  const kpiData = [
+    { label:'Campaigns', value: totalCampaigns, unit:'', color:'#2563EB', bg:'#EFF6FF' },
+    { label:'Total BL%', value: totalBL.toFixed(1), unit:'%', color:'#059669', bg:'#F0FDF4' },
+    { label:'Countries', value: countryCount, unit:'', color:'#D97706', bg:'#FFFBEB' },
+    { label:'Quarters covered', value: quarters.length || '—', unit:'', color:'#7C3AED', bg:'#F5F3FF' },
+  ];
+
+  const el = document.getElementById('perf-kpi-row');
+  if(!el) return;
+  el.innerHTML = kpiData.map(k => `
+    <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;box-shadow:0 1px 2px rgba(0,0,0,.05)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt2);margin-bottom:6px">${k.label}</div>
+      <div style="font-size:24px;font-weight:700;color:${k.color};line-height:1">${k.value}<span style="font-size:14px;font-weight:500;color:var(--txt2)">${k.unit}</span></div>
+    </div>`).join('');
 }
 
 // ── BL% Table ──────────────────────────────────────────────
@@ -1537,99 +1570,84 @@ function renderPerfBL(){
   const fromQ = document.getElementById('perf-q-from')?.value || '2026Q2';
   const toQ   = document.getElementById('perf-q-to')?.value   || '2026Q3';
 
-  // Collect selected countries
-  const allMarkets = ['TW','HK','CN','SG','MY'];
-  const selectedMarkets = allMarkets.filter(m => {
+  const allCountries = ['TW','HK','CN','SG','MY'];
+  const selectedCountries = allCountries.filter(m => {
     const el = document.querySelector(`#perf-chk-${m} input`);
     return el && el.checked;
   });
 
-  // Collect all quarters in range
   const quartersInRange = [];
-  const years = [2025, 2026, 2027];
-  years.forEach(y => [1,2,3,4].forEach(q => {
+  [2025,2026,2027].forEach(y => [1,2,3,4].forEach(q => {
     const qStr = `${y}Q${q}`;
     if(qStr >= fromQ && qStr <= toQ) quartersInRange.push(qStr);
   }));
 
-  // Filter records
-  const filtered = records.filter(r =>
-    selectedMarkets.includes(r.region) && quarterInRange(r.quarter, fromQ, toQ)
-  );
+  renderPerfKPIs(records, selectedCountries, fromQ, toQ);
 
+  const filtered = records.filter(r => selectedCountries.includes(r.country) && quarterInRange(r.quarter, fromQ, toQ));
   const el = document.getElementById('perf-bl-table');
   if(!el) return;
 
-  if(selectedMarkets.length === 0 || quartersInRange.length === 0){
-    el.innerHTML = '<div style="text-align:center;padding:28px;color:var(--txt2);font-size:13px">Select at least one market and quarter range.</div>';
+  if(selectedCountries.length === 0 || quartersInRange.length === 0){
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--txt2);font-size:13px">Select at least one country and quarter range.</div>';
     return;
   }
 
-  // Build pivot: market → quarter → [bl values]
   const pivot = {};
-  selectedMarkets.forEach(m => { pivot[m] = {}; quartersInRange.forEach(q => { pivot[m][q] = []; }); });
+  selectedCountries.forEach(m => { pivot[m] = {}; quartersInRange.forEach(q => { pivot[m][q] = []; }); });
   filtered.forEach(r => {
-    if(pivot[r.region] && pivot[r.region][r.quarter] !== undefined){
+    if(pivot[r.country] && pivot[r.country][r.quarter] !== undefined){
       const bl = parseFloat(r.bl);
-      if(!isNaN(bl)) pivot[r.region][r.quarter].push(bl);
+      if(!isNaN(bl)) pivot[r.country][r.quarter].push(bl);
     }
   });
 
   const sum = arr => arr.length ? arr.reduce((a,b)=>a+b,0).toFixed(1) : '—';
   const blColor = v => {
-    if(v === '—') return 'var(--txt2)';
+    if(v==='—') return 'var(--txt2)';
     const n = parseFloat(v);
-    if(n >= 9) return '#059669';
-    if(n >= 7) return '#2563EB';
-    if(n >= 5) return '#D97706';
-    return '#DC2626';
+    if(n>=9) return '#059669'; if(n>=7) return '#2563EB'; if(n>=5) return '#D97706'; return '#DC2626';
   };
-
-  // If no data yet, show empty state with placeholder
-  const hasData = filtered.length > 0;
 
   let html = `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">
     <thead><tr>
-      <th style="text-align:left;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px;min-width:60px">Market</th>
-      ${quartersInRange.map(q => `<th style="text-align:center;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px">${q}</th>`).join('')}
-      <th style="text-align:center;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px">Period total BL%</th>
-      <th style="text-align:center;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px"># Campaigns</th>
-    </tr></thead>
-    <tbody>`;
+      <th style="text-align:left;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px;min-width:70px">Country</th>
+      ${quartersInRange.map(q=>`<th style="text-align:center;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px">${q}</th>`).join('')}
+      <th style="text-align:center;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px">Period BL%</th>
+      <th style="text-align:center;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px"># Campaigns</th>
+    </tr></thead><tbody>`;
 
-  selectedMarkets.forEach((m, ri) => {
+  selectedCountries.forEach((m, ri) => {
     const allBls = Object.values(pivot[m]).flat();
     const periodSum = sum(allBls);
-    const count = allBls.length;
     html += `<tr style="background:${ri%2===0?'#fff':'#FAFAFA'}">
-      <td style="padding:9px 10px;border-bottom:1px solid var(--border);font-weight:600;color:var(--navy)">${m}</td>
+      <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--navy)">${m}</td>
       ${quartersInRange.map(q => {
-        const vals = pivot[m][q];
-        const a = sum(vals);
-        const n = vals.length;
-        return `<td style="text-align:center;padding:9px 10px;border-bottom:1px solid var(--border)">
-          ${a !== '—' ? `<span style="font-weight:700;color:${blColor(a)}">${a}%</span><span style="font-size:10px;color:var(--txt2);margin-left:3px">(${n})</span>` : '<span style="color:#D1D5DB;font-size:11px">—</span>'}
+        const vals = pivot[m][q]; const a = sum(vals);
+        return `<td style="text-align:center;padding:9px 12px;border-bottom:1px solid var(--border)">
+          ${a!=='—'?`<span style="font-weight:700;color:${blColor(a)}">${a}%</span><span style="font-size:10px;color:var(--txt2);margin-left:3px">(${vals.length})</span>`:'<span style="color:#D1D5DB;font-size:11px">—</span>'}
         </td>`;
       }).join('')}
-      <td style="text-align:center;padding:9px 10px;border-bottom:1px solid var(--border);font-weight:700;color:${blColor(periodSum)}">${periodSum !== '—' ? periodSum+'%' : '—'}</td>
-      <td style="text-align:center;padding:9px 10px;border-bottom:1px solid var(--border);color:var(--txt2)">${count}</td>
+      <td style="text-align:center;padding:9px 12px;border-bottom:1px solid var(--border);font-weight:700;color:${blColor(periodSum)}">${periodSum!=='—'?periodSum+'%':'—'}</td>
+      <td style="text-align:center;padding:9px 12px;border-bottom:1px solid var(--border);color:var(--txt2)">${allBls.length}</td>
     </tr>`;
   });
-
   html += `</tbody></table></div>`;
-
-  if(!hasData){
-    html += `<div style="text-align:center;padding:16px 0 4px;font-size:12px;color:var(--txt2)">
-      💡 BL% data will populate here once campaigns have confirmed start dates. Data is pulled from Match Plans → Confirmed Deliverables.
-    </div>`;
-  }
-
+  if(!filtered.length) html += `<div style="text-align:center;padding:12px 0 2px;font-size:12px;color:var(--txt2)">💡 BL% data will populate once campaigns have confirmed start dates.</div>`;
   el.innerHTML = html;
 }
 
-// ── Campaign SQL Table ──────────────────────────────────────
+// ── Campaign Table ──────────────────────────────────────────
+let campSort = { key: 'duringStart', dir: 'asc' };
+
+function setCampSort(key){
+  if(campSort.key === key) campSort.dir = campSort.dir === 'asc' ? 'desc' : 'asc';
+  else { campSort.key = key; campSort.dir = key === 'duringStart' ? 'asc' : 'asc'; }
+  renderCampaignTable();
+}
+
 function renderCampaignTable(){
-  const records = getCampaignRecords();
+  let records = getCampaignRecords();
   const el = document.getElementById('perf-campaign-table');
   if(!el) return;
 
@@ -1637,48 +1655,67 @@ function renderCampaignTable(){
     el.innerHTML = `<div style="text-align:center;padding:36px 20px;color:var(--txt2);font-size:13px">
       <div style="font-size:28px;margin-bottom:8px">📭</div>
       No campaigns with confirmed start dates yet.<br>
-      <span style="font-size:12px">Go to Match Plans → confirm deliverables → set publish date to populate this table.</span>
+      <span style="font-size:12px">Go to Match Plans → confirm deliverables → set publish date.</span>
     </div>`;
     return;
   }
 
+  // Sort
+  records = [...records].sort((a,b) => {
+    let va = a[campSort.key] || '';
+    let vb = b[campSort.key] || '';
+    if(campSort.key === 'bl'){ va = parseFloat(va)||0; vb = parseFloat(vb)||0; }
+    if(va < vb) return campSort.dir === 'asc' ? -1 : 1;
+    if(va > vb) return campSort.dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
   const cols = [
-    { key:'region', label:'Region (htl)' },
-    { key:'hid',    label:'HID' },
-    { key:'mm',     label:'MM' },
-    { key:'hotel',  label:'Hotel Name' },
-    { key:'startDate', label:'Start Date' },
-    { key:'endDate',   label:'End Date (+13d)' },
+    { key:'country',    label:'Country' },
+    { key:'hid',        label:'HID' },
+    { key:'mm',         label:'MM' },
+    { key:'hotel',      label:'Hotel Name' },
+    { key:'bl',         label:'BL%' },
+    { key:'preStart',   label:'Pre Start' },
+    { key:'preEnd',     label:'Pre End' },
+    { key:'duringStart',label:'During Start' },
+    { key:'duringEnd',  label:'During End' },
   ];
+
+  const sortIco = key => {
+    if(campSort.key !== key) return '<span style="color:#D1D5DB;margin-left:3px;font-size:9px">⇅</span>';
+    return `<span style="color:var(--blue);margin-left:3px;font-size:9px">${campSort.dir==='asc'?'▲':'▼'}</span>`;
+  };
 
   el.innerHTML = `<div style="overflow-x:auto">
     <table style="width:100%;border-collapse:collapse;font-size:12px">
       <thead><tr>
-        ${cols.map(c=>`<th style="text-align:left;padding:8px 10px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap">${c.label}</th>`).join('')}
+        ${cols.map(c=>`<th onclick="setCampSort('${c.key}')" style="text-align:left;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;color:var(--txt2);font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;cursor:pointer;user-select:none" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background='var(--bg)'">${c.label}${sortIco(c.key)}</th>`).join('')}
       </tr></thead>
       <tbody>
-        ${records.map((r,i)=>`<tr style="background:${i%2===0?'#fff':'#FAFAFA'}" class="matched-table-row">
-          <td style="padding:9px 10px;border-bottom:1px solid var(--border)">
-            <span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:#EFF6FF;color:#1D4ED8">${escapeHtml(r.region)}</span>
-          </td>
-          <td style="padding:9px 10px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px;font-weight:700;color:var(--navy)">${escapeHtml(r.hid)}</td>
-          <td style="padding:9px 10px;border-bottom:1px solid var(--border);color:var(--txt2)">${escapeHtml(r.mm)}</td>
-          <td style="padding:9px 10px;border-bottom:1px solid var(--border);font-weight:500;color:var(--navy)">${escapeHtml(r.hotel)}</td>
-          <td style="padding:9px 10px;border-bottom:1px solid var(--border);font-family:monospace;color:#059669;font-weight:600">${escapeHtml(r.startDate)}</td>
-          <td style="padding:9px 10px;border-bottom:1px solid var(--border);font-family:monospace;color:#DC2626;font-weight:600">${escapeHtml(r.endDate)}</td>
+        ${records.map((r,i)=>`<tr style="background:${i%2===0?'#fff':'#FAFAFA'}">
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border)"><span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:#EFF6FF;color:#1D4ED8">${escapeHtml(r.country)}</span></td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px;font-weight:700;color:var(--navy)">${escapeHtml(r.hid)}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--txt2)">${escapeHtml(r.mm)}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-weight:500;color:var(--navy);white-space:nowrap">${escapeHtml(r.hotel)}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-weight:700;color:#1E40AF;text-align:right">${r.bl !== '—' ? parseFloat(r.bl).toFixed(1)+'%' : '—'}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px;color:#6B7280">${escapeHtml(r.preStart)}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px;color:#6B7280">${escapeHtml(r.preEnd)}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px;color:#059669;font-weight:600">${escapeHtml(r.duringStart)}</td>
+          <td style="padding:9px 12px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px;color:#DC2626;font-weight:600">${escapeHtml(r.duringEnd)}</td>
         </tr>`).join('')}
       </tbody>
     </table>
   </div>`;
 }
 
-// Copy campaign table as CSV
+// Copy CSV — includes pre + during dates + BL%
 function copyCampaignCSV(){
   const records = getCampaignRecords();
   if(records.length === 0){ showToast('No data to copy yet.', '⚠️'); return; }
-  const header = 'Region (htl),HID,MM,Hotel Name,Start Date,End Date (+13d)';
+  const header = 'Country,HID,MM,Hotel Name,BL%,Pre Start,Pre End,During Start,During End';
   const rows = records.map(r =>
-    [r.region, r.hid, r.mm, r.hotel, r.startDate, r.endDate]
+    [r.country, r.hid, r.mm, r.hotel, r.bl, r.preStart, r.preEnd, r.duringStart, r.duringEnd]
     .map(v => `"${String(v).replace(/"/g,'""')}"`)
     .join(',')
   );
