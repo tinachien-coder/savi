@@ -554,7 +554,16 @@ body:not(.locked) .read-only-only{display:none!important}
         <div class="dash-section">
           <div class="dash-section-head">
             <div class="dash-section-title">🆕 Recent Signups <span class="dash-section-sub">— unread, click to mark read or open in All Hotels</span></div>
-            <button class="btn btn-ghost btn-sm" onclick="markAllRead()">✓ Mark all read</button>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div class="period-sw" id="recent-country-sw">
+                <button class="period-btn active" onclick="setRecentCountry('')">All</button>
+                <button class="period-btn" onclick="setRecentCountry('TW')">TW</button>
+                <button class="period-btn" onclick="setRecentCountry('HKMO')">HKMO</button>
+                <button class="period-btn" onclick="setRecentCountry('CN')">CN</button>
+                <button class="period-btn" onclick="setRecentCountry('SG')">SG</button>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="markAllRead()">✓ Mark all read</button>
+            </div>
           </div>
           <div class="recent-list" id="recent-list"></div>
         </div>
@@ -562,7 +571,7 @@ body:not(.locked) .read-only-only{display:none!important}
         <!-- Block 4 (last): Inbound slot usage -->
         <div class="dash-section" style="margin-bottom:0">
           <div class="dash-section-head">
-            <div class="dash-section-title">📬 Inbound Slot Usage <span class="dash-section-sub">— cap: 96 hotels per market per month</span></div>
+            <div class="dash-section-title">📬 Inbound Slot Usage <span class="dash-section-sub">— each hotel consumes 1 slot per exposure market · cap: 96 per market per month</span></div>
             <div class="period-sw" id="month-sw"></div>
           </div>
           <div class="slot-grid" id="slot-grid"></div>
@@ -839,6 +848,10 @@ const COUNTRIES = [
   { code:'CN'   },
   { code:'SG'   },
 ];
+
+// All 11 inbound markets tracked for slot usage
+// A hotel consumes 1 slot per inbound market it exposes to, per month
+const INBOUND_MARKETS = ['TW','HK','CN','JP','KR','SG','MY','TH','PH','VN','ID'];
 
 // Tier config per market — sourced from Standard_STS_Signup Form 2026.xlsx → Standard_Config sheet.
 // Each tier carries an icon + display label so the same key renders consistently across screens.
@@ -1542,12 +1555,26 @@ function renderCountrySummary(){
 }
 
 // ── Block 3: Recent signups (unread) ────────────────────────
+let recentCountryFilter = ''; // '' = all
+
+function setRecentCountry(c){
+  recentCountryFilter = c;
+  document.querySelectorAll('#recent-country-sw .period-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === (c||'All'));
+  });
+  renderRecentSignups();
+}
+
 function renderRecentSignups(){
   const sorted = [...hotels].sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-  const unread = sorted.filter(h => !readSet.has(h.id)).slice(0, 12);
+  let filtered = sorted.filter(h => !readSet.has(h.id));
+  if(recentCountryFilter) filtered = filtered.filter(h => h.country === recentCountryFilter);
+  const unread = filtered.slice(0, 15);
   const list = document.getElementById('recent-list');
   if(unread.length === 0){
-    list.innerHTML = `<div class="recent-empty">🎉 You're all caught up — no unread signups.</div>`;
+    list.innerHTML = recentCountryFilter
+      ? `<div class="recent-empty">No unread signups for ${recentCountryFilter}.</div>`
+      : `<div class="recent-empty">🎉 You're all caught up — no unread signups.</div>`;
     return;
   }
   list.innerHTML = unread.map(h => {
@@ -1590,33 +1617,55 @@ function markAllRead(){
   renderRecentSignups();
   toast('All marked as read', '✓');
 }
-
-// ── Block 4: Inbound slot usage (cap 96 / market / month) ────
 function renderInboundSlots(){
   const { from, to } = monthRange(selectedMonth);
+
+  // Count: for each hotel in this month, look at its inboundMarkets array
+  // (or derive from tier rule as fallback) and +1 for each market it exposes to
+  // That's the correct slot consumption logic matching the Excel Inbound_Cap_Config sheet
   const counts = {};
-  COUNTRIES.forEach(c => counts[c.code] = 0);
+  INBOUND_MARKETS.forEach(m => counts[m] = 0);
+
   hotels.forEach(h => {
     const t = new Date(h.submittedAt);
-    if(t >= from && t <= to){
-      if(counts[h.country] !== undefined) counts[h.country] += 1;
-      else counts[h.country] = (counts[h.country]||0) + 1;
+    if(t < from || t > to) return;
+
+    // Get inbound markets for this hotel
+    let markets = [];
+    if(h.inboundMarkets && h.inboundMarkets.length){
+      markets = h.inboundMarkets;
+    } else {
+      // Fallback: derive from tier rule
+      const rule = tierRule(h.country, h.tier);
+      markets = rule ? rule.inbound : [];
     }
+
+    // Each market consumed gets +1 slot
+    markets.forEach(m => {
+      // Normalise HKMO -> HK for slot counting
+      const key = m === 'HKMO' ? 'HK' : m;
+      if(counts[key] !== undefined) counts[key] += 1;
+    });
   });
-  document.getElementById('slot-grid').innerHTML = COUNTRIES.map(c => {
-    const used = counts[c.code] || 0;
+
+  // Also update the slot grid CSS to show 11 markets in a tighter grid
+  const grid = document.getElementById('slot-grid');
+  if(grid) grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
+
+  document.getElementById('slot-grid').innerHTML = INBOUND_MARKETS.map(mkt => {
+    const used = counts[mkt] || 0;
     const pct  = Math.min(100, Math.round(used / MARKET_CAP * 100));
     let cls = '';
     if(pct >= 90) cls = 'danger';
     else if(pct >= 70) cls = 'warn';
     let pctNote = '';
-    if(pct >= 90) pctNote = `<span class="slot-danger">⚠ Approaching cap</span>`;
-    else if(pct >= 70) pctNote = `<span class="slot-warn">High usage</span>`;
-    else pctNote = `<span style="color:var(--txt2)">Healthy</span>`;
+    if(pct >= 90) pctNote = `<span class="slot-danger">⚠ Near cap</span>`;
+    else if(pct >= 70) pctNote = `<span class="slot-warn">High</span>`;
+    else pctNote = `<span style="color:var(--txt2)">OK</span>`;
     return `
       <div class="slot-card">
         <div class="slot-card-head">
-          <div><strong style="color:var(--navy);font-size:13px">${escapeHtml(c.code)}</strong></div>
+          <div><strong style="color:var(--navy);font-size:13px">${mkt}</strong></div>
           <div class="slot-card-fraction">${used}<span class="slot-cap"> / ${MARKET_CAP}</span></div>
         </div>
         <div class="slot-bar"><div class="slot-bar-fill ${cls}" style="width:${pct}%"></div></div>
