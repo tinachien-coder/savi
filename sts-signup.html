@@ -1,0 +1,2697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAVI — Social Total Solution Program Signup</title>
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#E4202C;--blue:#2563EB;--blue-lt:#EFF6FF;--blue-ring:rgba(37,99,235,.12);
+  --navy:#1A1F36;--teal:#00A5B5;--green:#33AC2E;--orange:#FF6D00;
+  --txt:#1F2937;--txt2:#6B7280;--border:#E5E7EB;--bg:#F4F6F9;
+  --sidebar-w:232px;--topbar-h:52px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;
+  color:var(--txt);background:var(--bg);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ── Topbar ── */
+.topbar{height:var(--topbar-h);background:#fff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:50;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.logo{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--navy);letter-spacing:-.3px}
+.logo-badge{background:var(--red);color:#fff;font-size:11px;font-weight:800;
+  padding:2px 8px;border-radius:5px;letter-spacing:.6px}
+.logo-sub{font-size:12px;font-weight:400;color:var(--txt2);border-left:1px solid var(--border);padding-left:12px}
+.topbar-spacer{flex:1}
+
+/* Mode toggle (read-only ↔ editor) */
+.mode-toggle{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:3px}
+.mode-btn{background:none;border:none;padding:4px 10px;border-radius:5px;cursor:pointer;
+  font-size:12px;color:var(--txt2);font-weight:500;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+.mode-btn:hover{background:#fff;color:var(--txt)}
+.mode-btn.active{background:#fff;color:var(--blue);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.mode-btn.editor.active{color:var(--green)}
+
+/* ── Layout ── */
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* ── Sidebar ── */
+.sidebar{width:var(--sidebar-w);background:#fff;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:14px 0;flex-shrink:0;overflow-y:auto}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;
+  color:var(--txt2);padding:0 16px;margin:14px 0 6px}
+.sb-label:first-child{margin-top:0}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;
+  color:var(--txt);font-size:13px;transition:background .1s;border-left:2.5px solid transparent}
+.sb-item:hover{background:var(--bg)}
+.sb-item.active{background:var(--blue-lt);color:var(--blue);border-left-color:var(--blue);font-weight:500}
+.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-pill{margin-left:auto;font-size:10px;color:var(--txt2);background:var(--bg);
+  padding:1px 7px;border-radius:10px;border:1px solid var(--border)}
+.sb-pill.alert{background:#FEE2E2;color:#991B1B;border-color:#FECACA;font-weight:700}
+.sb-pill.unread{background:#FEF3C7;color:#92400E;border-color:#FDE68A;font-weight:700}
+
+/* ── Main ── */
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.main-scroll{flex:1;overflow-y:auto;padding:22px 28px}
+
+/* ── Screen wrapper ── */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── Page header ── */
+.pg-header-wrap{display:flex;align-items:flex-end;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+.pg-title{font-size:21px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.pg-sub{font-size:13px;color:var(--txt2);margin-bottom:0;line-height:1.55;max-width:760px}
+
+/* ── Buttons ── */
+.btn{padding:8px 16px;border-radius:7px;font-size:13px;font-weight:500;
+  cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-primary:hover{background:#1D4ED8;border-color:#1D4ED8}
+.btn-primary:disabled{background:#BFDBFE;border-color:#BFDBFE;color:#fff;cursor:not-allowed}
+.btn-ghost{background:#fff;color:var(--txt);border-color:var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-green:hover{background:#29902A;border-color:#29902A}
+.btn-orange{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn-orange:hover{background:#E66200;border-color:#E66200}
+.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:6px}
+
+/* ── Form card ── */
+.form-card{background:#fff;border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;margin-bottom:12px}
+.fc-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:18px;
+  display:flex;align-items:center;gap:8px}
+.fc-icon{width:24px;height:24px;border-radius:6px;background:var(--blue-lt);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.frow{margin-bottom:15px}
+.frow:last-child{margin-bottom:0}
+.flabel{font-size:12px;font-weight:500;color:#4B5563;margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.req{color:var(--red)}
+.flabel-hint{font-size:11px;color:var(--txt2);font-weight:400}
+.finput,.fselect,.ftarea{width:100%;padding:8px 11px;border:1px solid var(--border);
+  border-radius:7px;font-size:13px;font-family:inherit;color:var(--txt);
+  transition:border-color .15s,box-shadow .15s;background:#fff;outline:none}
+.finput:focus,.fselect:focus,.ftarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-ring)}
+.finput.err,.fselect.err,.ftarea.err{border-color:#EF4444}
+.ferr{font-size:11px;color:#DC2626;margin-top:4px;display:flex;align-items:center;gap:3px}
+.fhint{font-size:11px;color:var(--txt2);margin-top:4px;line-height:1.45}
+.ftarea{resize:vertical;min-height:78px}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.finput-suffix-wrap{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:7px;overflow:hidden;background:#fff;transition:border-color .15s,box-shadow .15s}
+.finput-suffix-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-ring)}
+.finput-suffix-wrap .finput{border:none;border-radius:0;flex:1}
+.finput-suffix-wrap .finput:focus{box-shadow:none}
+.finput-suffix{padding:8px 11px;background:var(--bg);color:var(--txt2);font-size:12px;font-weight:600;border-left:1px solid var(--border);display:flex;align-items:center}
+
+/* Tier picker — column count adapts to how many tiers are available for the chosen country */
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.tier-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 10px;
+  cursor:pointer;transition:all .15s;text-align:center;background:#fff}
+.tier-card:hover{border-color:var(--blue)}
+.tier-card.sel{border-color:var(--blue);background:var(--blue-lt)}
+.tier-nm{font-weight:700;font-size:13px;margin-bottom:3px;color:var(--navy)}
+.tier-desc{font-size:10.5px;color:var(--txt2);line-height:1.4}
+.tier-card.sel .tier-nm{color:var(--blue)}
+.tier-chk{display:none;color:var(--blue);font-size:12px;margin-top:4px;font-weight:700}
+.tier-card.sel .tier-chk{display:block}
+
+/* Independent + Eligibility toggles (shared style) */
+.indep-toggle,.elig-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;flex-wrap:wrap}
+.indep-toggle button,.elig-toggle button{background:#fff;border:none;padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--txt2);transition:all .15s;white-space:nowrap}
+.indep-toggle button:hover,.elig-toggle button:hover{background:var(--bg)}
+.indep-toggle button.sel,.elig-toggle button.sel{background:var(--blue);color:#fff}
+.indep-toggle button + button,.elig-toggle button + button{border-left:1px solid var(--border)}
+
+/* Tier card preview — commitment is the prominent piece; markets stay subtle below */
+.tier-card{padding:16px 12px 12px}
+.tier-card .tier-nm{font-size:14px;margin-bottom:4px}
+.tier-card .tier-desc{font-size:11px;margin-bottom:10px}
+.tier-card .tier-preview{margin-top:6px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.tier-card .tier-preview .tp-commit-line{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;align-items:center;font-size:13.5px;font-weight:800;color:#92400E;line-height:1.25}
+.tier-card.sel .tier-preview .tp-commit-line{color:#1E3A8A}
+.tier-card .tier-preview .tp-or{font-size:10px;font-weight:700;color:var(--txt2);letter-spacing:1px}
+.tier-card .tier-preview .tp-markets{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;font-size:10.5px;color:var(--txt2);line-height:1.3;font-weight:600}
+.tier-card .tier-preview .tp-flag{font-size:12px;line-height:1}
+.tier-card .tier-chk{font-size:11.5px;margin-top:6px}
+
+/* Tier Requirements panel (shown after tier picked) — bumped font sizes per design feedback */
+.tier-req-panel{margin-top:14px;background:linear-gradient(135deg,#FFFBEB 0%,#FFF8F0 100%);border:1.5px solid #FCD34D;border-radius:10px;padding:0;overflow:hidden}
+.tier-req-head{background:#1A1F36;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.2px}
+.tier-req-body{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tier-req-card{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:14px 16px}
+.tier-req-card.full{grid-column:1/-1}
+.tier-req-card-title{font-size:12.5px;font-weight:700;color:#92400E;margin-bottom:11px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+.tier-req-card-title .req{color:#DC2626;margin-left:2px}
+
+/* Commitment options (radio cards) */
+.commit-opts{display:flex;flex-direction:column;gap:8px}
+.commit-opt{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;transition:all .15s}
+.commit-opt:hover{border-color:#FCD34D;background:#FFFBEB}
+.commit-opt.sel{border-color:#92400E;background:#FFFBEB;box-shadow:0 0 0 2px #FDE68A55}
+.commit-opt input[type=radio]{accent-color:#92400E;width:15px;height:15px;cursor:pointer}
+.commit-opt .co-emoji{font-size:18px}
+.commit-opt .co-text{flex:1;font-size:14px;color:var(--txt);font-weight:600}
+.commit-opt.sel .co-text{color:#92400E}
+.commit-opt .co-pct{font-size:16px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.commit-locked{padding:11px 13px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:8px;display:flex;align-items:center;gap:10px;font-size:14px;color:#065F46;font-weight:700}
+.commit-locked .co-emoji{font-size:18px}
+.commit-locked .co-pct{margin-left:auto;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* Inbound markets chips (just the 2-letter code on a blue pill) */
+.inbound-chips{display:flex;flex-wrap:wrap;gap:7px}
+.inbound-chip{display:inline-flex;align-items:center;padding:5px 11px;background:var(--blue-lt);color:var(--navy);border:1px solid #BFDBFE;border-radius:14px;font-size:13px;font-weight:700;line-height:1.1;font-family:'SF Mono',Menlo,monospace;letter-spacing:.5px}
+
+/* Criteria + restriction lines */
+.tr-criteria{font-size:14px;color:#374151;line-height:1.5}
+.tr-criteria strong{color:var(--navy);font-size:14.5px}
+.tr-empty{color:var(--txt2);font-style:italic;font-size:13px}
+.tr-restriction{margin-top:8px;padding:7px 11px;background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;font-size:13px;color:#991B1B;font-weight:600}
+
+/* Commitment Period card (date inputs + INM screenshot reminder) */
+.period-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.period-field label{display:block;font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:4px;letter-spacing:.3px;text-transform:uppercase}
+.period-field input[type=date]{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;font-weight:600;color:var(--navy);background:#fff;font-family:inherit}
+.period-field input[type=date]:focus{outline:none;border-color:#92400E;box-shadow:0 0 0 2px #FDE68A55}
+.period-summary{font-size:13px;font-weight:700;padding:9px 12px;border-radius:7px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.period-summary.ok{background:#F0FDF4;color:#065F46;border:1.5px solid #86EFAC}
+.period-summary.short{background:#FEF2F2;color:#991B1B;border:1.5px solid #FECACA}
+.period-summary.blank{background:#F3F4F6;color:var(--txt2);border:1.5px dashed var(--border)}
+.period-rule{margin-top:10px;font-size:12px;color:var(--txt2)}
+.period-rule strong{color:var(--navy)}
+.inm-callout{margin-top:12px;padding:11px 13px;background:#FEF3C7;border:1.5px solid #F59E0B;border-radius:8px;font-size:13px;color:#78350F;line-height:1.5;display:flex;gap:10px;align-items:flex-start}
+.inm-callout .ic-icon{font-size:18px;line-height:1.2}
+.inm-callout strong{color:#92400E}
+.inm-callout a{color:#92400E;font-weight:700;text-decoration:underline}
+.inm-callout.active{background:#FFF7ED;border-color:#F97316;border-width:2px;box-shadow:0 0 0 3px #FED7AA88}
+
+/* Form actions */
+.form-actions{display:flex;align-items:center;gap:10px;padding-top:6px;flex-wrap:wrap}
+
+/* ── Toast ── */
+.toast{position:fixed;top:18px;right:18px;background:var(--navy);color:#fff;
+  padding:11px 18px;border-radius:9px;font-size:13px;font-weight:500;
+  z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.22);display:flex;align-items:center;gap:9px;
+  transform:translateY(-90px);transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s;
+  opacity:0;pointer-events:none;max-width:420px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── Utils ── */
+.hidden{display:none!important}
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px}
+
+/* ══════════════════════════════════════════════════════════════
+ * DASHBOARD
+ * ══════════════════════════════════════════════════════════════ */
+.dash-section{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.dash-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.dash-section-title{font-size:15px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px}
+.dash-section-sub{font-size:11.5px;color:var(--txt2);font-weight:400;margin-left:6px}
+
+/* Quarter / period selectors */
+.period-sw{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:3px;flex-wrap:wrap}
+.period-btn{background:none;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;
+  font-size:12px;color:var(--txt2);font-weight:500;font-family:inherit;transition:all .15s;white-space:nowrap}
+.period-btn:hover{background:#fff;color:var(--txt)}
+.period-btn.active{background:#fff;color:var(--blue);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* Quarter KPI grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.kpi-card{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:linear-gradient(135deg,#FAFBFF 0%,#fff 100%)}
+.kpi-card.accent{border-color:#BFDBFE;background:linear-gradient(135deg,#EFF6FF 0%,#fff 100%)}
+.kpi-card.accent2{border-color:#86EFAC;background:linear-gradient(135deg,#F0FDF4 0%,#fff 100%)}
+.kpi-card.accent3{border-color:#FDE68A;background:linear-gradient(135deg,#FFFBEB 0%,#fff 100%)}
+.kpi-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt2);margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--navy);line-height:1.1;display:flex;align-items:baseline;gap:6px}
+.kpi-value .kpi-unit{font-size:13px;font-weight:600;color:var(--txt2)}
+.kpi-sub{font-size:11px;color:var(--txt2);margin-top:4px;line-height:1.4}
+
+/* Country summary table */
+.summary-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+.summary-table{width:100%;border-collapse:collapse;font-size:12px;min-width:760px}
+.summary-table th{text-align:left;font-weight:700;color:var(--txt2);font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;background:#F8FAFC;
+  border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:1}
+.summary-table th.num{text-align:right}
+.summary-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.summary-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--navy)}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr.summary-row td{background:#F8FAFC;font-weight:700;color:var(--navy)}
+.summary-table tr.summary-row td:first-child{color:var(--blue)}
+.summary-table tbody tr:hover td{background:#FAFAFA}
+.summary-table tbody tr.summary-row:hover td{background:#F1F5F9}
+
+/* Recent signups (unread) */
+.recent-list{display:flex;flex-direction:column;gap:8px}
+.recent-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #FDE68A;
+  border-left-width:3px;border-left-color:#F59E0B;border-radius:9px;padding:10px 14px;font-size:12.5px;
+  cursor:pointer;transition:all .15s}
+.recent-card:hover{border-color:#F59E0B;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+.recent-card.read{border-color:var(--border);border-left-color:#D1D5DB;background:#FAFAFA;opacity:.7}
+.recent-icon{font-size:18px;flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px}
+.recent-card.read .recent-icon{background:var(--bg);border-color:var(--border)}
+.recent-info{flex:1;min-width:0}
+.recent-hotel{font-weight:700;color:var(--navy);display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:2px}
+.recent-hotel .recent-hid{font-size:10.5px;font-weight:700;color:var(--txt);background:#F3F4F6;padding:1px 6px;border-radius:5px;border:1px solid var(--border);font-family:'SF Mono',Menlo,monospace}
+.recent-hotel .recent-bl{font-size:10.5px;font-weight:700;color:#1E40AF;background:#EFF6FF;padding:1px 6px;border-radius:5px;border:1px solid #BFDBFE}
+.recent-meta{font-size:11px;color:var(--txt2);line-height:1.5}
+.recent-meta strong{color:var(--txt)}
+.recent-actions{display:flex;gap:6px;flex-shrink:0}
+.recent-empty{text-align:center;padding:32px 16px;color:var(--txt2);font-size:12.5px;background:var(--bg);border:1px dashed var(--border);border-radius:10px}
+.recent-unread-dot{display:inline-block;width:8px;height:8px;background:#F59E0B;border-radius:50%;margin-right:3px}
+
+/* Inbound slot usage */
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.slot-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+.slot-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-size:13px;font-weight:700;color:var(--navy)}
+.slot-card-fraction{font-size:13px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.slot-card-fraction .slot-cap{font-size:11px;color:var(--txt2);font-weight:500}
+.slot-bar{height:8px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
+.slot-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),#22C55E);transition:width .3s ease}
+.slot-bar-fill.warn{background:linear-gradient(90deg,#F59E0B,#FBBF24)}
+.slot-bar-fill.danger{background:linear-gradient(90deg,#EF4444,#F87171)}
+.slot-card-pct{font-size:11px;color:var(--txt2);margin-top:5px;display:flex;justify-content:space-between}
+.slot-card-pct .slot-warn{color:#92400E;font-weight:700}
+.slot-card-pct .slot-danger{color:#991B1B;font-weight:700}
+
+/* ══════════════════════════════════════════════════════════════
+ * ALL HOTELS TABLE
+ * ══════════════════════════════════════════════════════════════ */
+.ah-toolbar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px;
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ah-toolbar label{font-size:11.5px;font-weight:600;color:var(--txt2)}
+.ah-toolbar select,.ah-toolbar input[type=text]{padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;color:var(--txt);background:#fff;cursor:pointer}
+.ah-toolbar input[type=text]{cursor:text;min-width:200px}
+.ah-toolbar select:focus,.ah-toolbar input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-ring)}
+.ah-toolbar .ah-spacer{flex:1}
+.ah-count{font-size:11px;color:var(--txt2);font-weight:500}
+
+.ah-table-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:auto;max-width:100%}
+.ah-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1480px}
+.ah-table th{background:#F8FAFC;color:var(--txt2);font-weight:700;padding:9px 11px;border-bottom:2px solid var(--border);
+  text-align:left;white-space:nowrap;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;
+  position:sticky;top:0;z-index:2}
+.ah-table th.sortable{cursor:pointer;user-select:none;transition:background .12s,color .12s}
+.ah-table th.sortable:hover{background:#EFF6FF;color:var(--blue)}
+.ah-table th.sortable.active{color:var(--blue);background:#EFF6FF}
+.ah-table th .sort-ico{font-size:9px;margin-left:3px;color:#9CA3AF}
+.ah-table th.sortable.active .sort-ico{color:var(--blue)}
+.ah-table td{padding:9px 11px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--txt)}
+.ah-table tr:last-child td{border-bottom:none}
+.ah-table tr:hover td{background:#FAFBFF}
+.ah-table .ah-hid{font-family:'SF Mono',Menlo,monospace;font-weight:600;color:var(--navy);white-space:nowrap}
+.ah-table .ah-name{font-weight:600;color:var(--navy);min-width:180px}
+.ah-table .ah-name-cn{display:block;color:var(--navy);font-weight:700}
+.ah-table .ah-name-en{display:block;color:var(--txt2);font-size:11px;font-weight:500;margin-top:1px}
+.ah-table .ah-bl{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:#1E40AF;white-space:nowrap}
+.ah-table .ah-link a{color:var(--blue);text-decoration:none;font-weight:600;font-size:11px}
+.ah-table .ah-link a:hover{text-decoration:underline}
+.ah-table .ah-link .ah-no-link{color:var(--txt2);font-style:italic;font-size:11px}
+.ah-table input.cell-input,.ah-table select.cell-input{padding:5px 8px;border:1px solid var(--border);border-radius:5px;font-size:11.5px;font-family:inherit;color:var(--txt);background:#fff;width:100%;min-width:120px}
+.ah-table input.cell-input:focus,.ah-table select.cell-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-ring)}
+.ah-table input.cell-input:disabled,.ah-table select.cell-input:disabled,.ah-table input.cell-input[readonly]{background:transparent;border-color:transparent;color:var(--txt);cursor:default}
+.ah-table .cell-readonly{font-weight:500;color:var(--txt)}
+.ah-table .ah-actions{display:flex;flex-direction:column;gap:4px;min-width:170px}
+.ah-table .ah-actions button{padding:4px 9px;font-size:10.5px;font-weight:700;border-radius:5px;cursor:pointer;border:1px solid;font-family:inherit;text-align:center;transition:all .12s;white-space:nowrap}
+.ah-action-precheck{background:#FFFBEB;border-color:#FCD34D;color:#92400E}
+.ah-action-precheck:hover{background:#FCD34D;color:#fff}
+.ah-action-notify{background:var(--blue-lt);border-color:#BFDBFE;color:var(--blue)}
+.ah-action-notify:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ah-action-notify-fail{background:#FEE2E2;border-color:#FECACA;color:#991B1B}
+.ah-action-notify-fail:hover{background:#DC2626;color:#fff;border-color:#DC2626}
+
+/* Status pills */
+.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;
+  padding:3px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.3px;border:1px solid;white-space:nowrap}
+.status-received{background:#DBEAFE;color:#1E40AF;border-color:#BFDBFE}
+.status-pending{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.status-failed{background:#FEE2E2;color:#991B1B;border-color:#FECACA}
+.status-confirmed{background:#D1FAE5;color:#065F46;border-color:#86EFAC}
+.elig-pill{display:inline-block;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.elig-pill.discount{background:#FEF3C7;color:#92400E;border-color:#FCD34D}
+.elig-pill.inm{background:#F3E8FF;color:#6B21A8;border-color:#D8B4FE}
+.indep-pill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:22px;border-radius:6px;font-size:11px;font-weight:800;border:1.5px solid;font-variant-numeric:tabular-nums}
+.indep-pill.y{background:#F3E8FF;color:#6B21A8;border-color:#D8B4FE}
+.indep-pill.n{background:#DBEAFE;color:#1E40AF;border-color:#BFDBFE}
+.country-cell{white-space:nowrap;font-weight:600;color:var(--navy)}
+
+/* All Hotels — Tier cell stack: tier label on top, inbound markets below */
+.ah-tier-stack{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.ah-tier-label{font-size:11.5px;font-weight:700;color:var(--navy);white-space:nowrap}
+.ah-inbound{display:flex;flex-wrap:wrap;gap:2px;max-width:200px}
+.ah-inbound-chip{display:inline-flex;align-items:center;padding:1px 5px;background:var(--blue-lt);border:1px solid #BFDBFE;border-radius:9px;font-size:9.5px;color:var(--navy);font-weight:700;line-height:1.3;white-space:nowrap;font-family:'SF Mono',Menlo,monospace;letter-spacing:.3px}
+
+/* Edit lock banner */
+.lock-banner{display:flex;align-items:center;gap:10px;background:#FFFBEB;border:1px solid #FDE68A;
+  border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#92400E}
+.lock-banner.unlocked{background:#F0FDF4;border-color:#86EFAC;color:#065F46}
+.lock-banner .lock-ico{font-size:16px}
+.lock-banner .lock-msg{flex:1;line-height:1.5}
+.lock-banner .lock-msg strong{font-weight:700}
+.lock-banner button{padding:5px 11px;font-size:11.5px;font-weight:700;border-radius:6px;cursor:pointer;border:1px solid;font-family:inherit}
+.lock-banner.locked button{background:#92400E;color:#fff;border-color:#92400E}
+.lock-banner.locked button:hover{background:#78350F;border-color:#78350F}
+.lock-banner.unlocked button{background:#fff;color:#065F46;border-color:#86EFAC}
+.lock-banner.unlocked button:hover{background:#F0FDF4}
+
+/* Precheck panel (drawer-style row) */
+.precheck-row{background:#FFFBEB}
+.precheck-row > td{padding:0!important}
+.precheck-panel{background:#FFFBEB;border-top:1px solid #FDE68A;border-bottom:1px solid #FDE68A;padding:16px 18px}
+.precheck-panel-title{font-size:12px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.precheck-panel-help{font-size:11.5px;color:#78350F;line-height:1.55;margin-bottom:12px;background:#fff;border:1px solid #FDE68A;border-radius:7px;padding:10px 12px}
+.precheck-panel-help code{background:#FEF3C7;padding:1px 5px;border-radius:4px;font-family:'SF Mono',Menlo,monospace;font-size:11px;color:#92400E}
+/* Status banner (mirrors KOL pvar screenshot) */
+.pc-status-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:8px;margin-bottom:10px;border:1px solid currentColor}
+.pc-status-cell.pc-status-main{flex:1}
+.pc-status-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.75}
+.pc-status-value{font-size:13px;font-weight:700;margin-top:2px}
+.pc-meta-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:10px 13px;margin-bottom:10px}
+.pc-meta-cell .pc-meta-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt2);margin-bottom:4px}
+.pc-meta-cell .pc-meta-value{font-size:13px;font-weight:700;color:var(--navy)}
+.pc-mono{font-family:'SF Mono',Menlo,monospace}
+.pc-date-input{width:100%;padding:6px 9px;border:1px solid #FDE68A;border-radius:5px;font-size:12px;font-family:inherit;background:#FFFBEB;color:var(--navy);font-weight:600}
+.pc-date-input:focus{outline:none;border-color:#D97706;box-shadow:0 0 0 2px #FDE68A55;background:#fff}
+.pc-date-input:disabled,.pc-date-input[readonly]{background:#fff;cursor:default}
+
+/* Two-panel pvar comparison */
+.pvar-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.pvar-card{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:0;overflow:hidden}
+.pvar-card-title{font-size:11.5px;font-weight:700;color:#92400E;padding:7px 11px;background:#FFFBEB;border-bottom:1px solid #FDE68A;text-align:center;text-transform:none;letter-spacing:0;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.pvar-table{width:100%;border-collapse:collapse;font-size:12px}
+.pvar-table th{background:#fff;color:var(--txt2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.4px;padding:7px 9px;border-bottom:1px solid #FDE68A;text-align:right}
+.pvar-table th.pvar-th-delta{text-align:center;width:90px;background:#FFFBEB}
+.pvar-table td{padding:9px;background:#fff}
+.pvar-table td input{width:100%;padding:6px 9px;border:1px solid var(--border);border-radius:5px;font-size:12px;font-family:inherit;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;background:#fff}
+.pvar-table td input:focus{outline:none;border-color:#D97706;box-shadow:0 0 0 2px #FDE68A55}
+.pvar-table td input:disabled,.pvar-table td input[readonly]{background:#FAFAFA;cursor:default;color:var(--txt)}
+.pvar-table td.pvar-delta-cell{text-align:center;background:#FFFBEB;border-left:1px solid #FDE68A}
+.pvar-delta{display:inline-block;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;padding:5px 10px;border-radius:6px;min-width:64px;color:var(--txt2);background:#fff;border:1px solid var(--border)}
+.pvar-delta.pass{color:#065F46;background:#D1FAE5;border-color:#86EFAC}
+.pvar-delta.fail{color:#991B1B;background:#FEE2E2;border-color:#FECACA}
+.pvar-delta.unknown{color:var(--txt2)}
+
+/* Notes + Result */
+.pc-notes-block{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:10px 13px;margin-bottom:10px}
+.pc-notes-label{font-size:10.5px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.pc-notes-input{width:100%;padding:7px 11px;border:1px solid #FDE68A;border-radius:6px;font-size:12.5px;font-family:inherit;background:#FFFBEB;color:var(--txt)}
+.pc-notes-input:focus{outline:none;border-color:#D97706;box-shadow:0 0 0 2px #FDE68A55;background:#fff}
+.pc-notes-input:disabled,.pc-notes-input[readonly]{background:#fff;cursor:default}
+.pc-result-block{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:10px 13px;margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.pc-result-block .pc-notes-label{margin-bottom:0;margin-right:6px}
+.pc-radio{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--txt);cursor:pointer;padding:4px 9px;border-radius:6px;border:1.5px solid transparent;transition:all .15s}
+.pc-radio input[type=radio]{accent-color:#92400E;width:14px;height:14px;cursor:pointer}
+.pc-radio:hover{background:#FFFBEB}
+.pc-radio.sel-pass{border-color:#86EFAC;background:#F0FDF4;color:#065F46;font-weight:600}
+.pc-radio.sel-fail{border-color:#FECACA;background:#FFF1F2;color:#991B1B;font-weight:600}
+.pc-radio input[type=radio]:disabled{cursor:not-allowed;opacity:.6}
+
+.pc-attach-block{background:#fff;border:1.5px dashed #FCD34D;border-radius:8px;padding:11px 13px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start}
+.pc-attach-ico{font-size:18px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:#FFFBEB;border:1px solid #FCD34D;border-radius:7px;flex-shrink:0}
+.pc-attach-body{flex:1;min-width:0}
+.pc-attach-label{font-size:10.5px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;display:block}
+.pc-attach-input-wrap{display:flex;gap:6px}
+.pc-attach-input-wrap input{flex:1;padding:6px 10px;border:1px solid #FDE68A;border-radius:6px;font-size:12px;font-family:inherit;background:#FFFBEB}
+.pc-attach-input-wrap input:focus{outline:none;border-color:#D97706;box-shadow:0 0 0 3px #FDE68A55;background:#fff}
+.pc-attach-open{flex-shrink:0;display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:#fff;background:#D97706;border:1px solid #D97706;padding:6px 11px;border-radius:6px;text-decoration:none}
+.pc-attach-open:hover{background:#92400E;border-color:#92400E}
+.precheck-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.precheck-actions .btn{padding:6px 12px;font-size:11.5px}
+.pc-history{margin-top:10px;background:#fff;border:1px solid #FDE68A;border-radius:7px;padding:10px 13px}
+.pc-history-title{font-size:10.5px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.pc-history-item{font-size:11px;color:var(--txt);padding:5px 0;border-top:1px dashed #FDE68A;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pc-history-item:first-child{border-top:none}
+.pc-history-item .pc-h-when{color:var(--txt2);font-size:10.5px}
+.pc-history-item .pc-h-num{font-weight:700;color:#92400E;font-variant-numeric:tabular-nums}
+.pc-history-item a{color:var(--blue);font-weight:600;font-size:10.5px;text-decoration:none;background:#EFF6FF;border:1px solid #BFDBFE;padding:1px 7px;border-radius:5px}
+.pc-history-item a:hover{background:var(--blue);color:#fff}
+
+/* Empty state */
+.ah-empty{text-align:center;padding:48px 20px;color:var(--txt2);font-size:13px}
+.ah-empty .ah-empty-icon{font-size:42px;margin-bottom:10px}
+.ah-empty strong{color:var(--txt);display:block;margin-bottom:6px;font-size:14px}
+
+/* Sign-up form indep / note conditional */
+.indep-note-wrap{display:none}
+.indep-note-wrap.visible{display:block}
+
+/* Lock-mode read-only protection */
+body.locked .editor-only{display:none!important}
+body.locked .read-only-only{display:inline-flex!important}
+body:not(.locked) .read-only-only{display:none!important}
+  </style>
+</head>
+<body class="locked">
+
+<!-- ═══════════════ TOPBAR ═══════════════ -->
+<header class="topbar">
+  <div class="logo">
+    <span class="logo-badge">SAVI</span>
+    <span class="logo-sub">Social Total Solution Program Signup</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="mode-toggle" title="View mode — switch to Editor to enable inline edits (password required)">
+    <button class="mode-btn active" id="mode-readonly" onclick="switchMode('readonly')">🔒 Read-only</button>
+    <button class="mode-btn editor" id="mode-editor" onclick="switchMode('editor')">✏️ Editor</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <nav class="sidebar">
+    <div class="sb-label">Overview</div>
+    <div class="sb-item active" id="sb-dashboard" onclick="navigate('dashboard')">
+      <span class="sb-dot" style="background:var(--blue)"></span>
+      <span>Dashboard</span>
+      <span class="sb-pill unread" id="sb-unread-count">0</span>
+    </div>
+
+    <div class="sb-label">Hotels</div>
+    <div class="sb-item" id="sb-all-hotels" onclick="navigate('all-hotels')">
+      <span class="sb-dot" style="background:var(--teal)"></span>
+      <span>All Hotels</span>
+      <span class="sb-pill" id="sb-all-count">0</span>
+    </div>
+    <div class="sb-item" id="sb-signup" onclick="navigate('signup')">
+      <span class="sb-dot" style="background:var(--green)"></span>
+      <span>STS Signup</span>
+    </div>
+
+    <div style="margin-top:auto;padding:10px 0">
+      <div class="sb-label">Quick Links</div>
+      <div class="sb-item" onclick="window.open('sts-signup.html','_blank')" title="Social Total Solution Signup Tool">
+        <span class="sb-dot" style="background:var(--blue)"></span>
+        <span>STS Signup</span>
+        <span style="font-size:11px;color:var(--txt2);margin-left:auto">↗</span>
+      </div>
+      <div class="sb-item" onclick="window.open('kol-admin.html','_blank')">
+        <span class="sb-dot" style="background:#8B5CF6"></span>
+        <span>KOL Admin</span>
+        <span style="font-size:11px;color:var(--txt2);margin-left:auto">↗</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-wrap">
+    <div class="main-scroll" id="main-scroll">
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- SCREEN: DASHBOARD                          -->
+      <!-- ══════════════════════════════════════════ -->
+      <div id="screen-dashboard" class="screen active">
+        <div class="pg-header-wrap">
+          <div>
+            <div class="pg-title">📊 Dashboard</div>
+            <div class="pg-sub">Quarterly signup totals, by-country breakdown, recent unread signups, and inbound slot usage (96 cap per market per month).</div>
+          </div>
+        </div>
+
+        <!-- Block 1: Quarterly KPI -->
+        <div class="dash-section">
+          <div class="dash-section-head">
+            <div class="dash-section-title">📅 Quarterly Signup <span class="dash-section-sub">— hotels signed up + total BL% in the selected quarter</span></div>
+            <div class="period-sw" id="quarter-sw"></div>
+          </div>
+          <div class="kpi-grid" id="quarter-kpi"></div>
+        </div>
+
+        <!-- Block 2: By-country summary — Independent Y/N × Discount/INM -->
+        <div class="dash-section">
+          <div class="dash-section-head">
+            <div class="dash-section-title">🌏 By Country Summary <span class="dash-section-sub">— Hotels · BL% split by Independent (Y/N) × Eligibility (Discount / INM)</span></div>
+            <div class="period-sw">
+              <button class="period-btn active" id="ctry-all" onclick="setCountrySummaryScope('all')">All Time</button>
+              <button class="period-btn" id="ctry-q" onclick="setCountrySummaryScope('quarter')">Selected Quarter</button>
+            </div>
+          </div>
+          <div class="summary-table-wrap">
+            <table class="summary-table" id="summary-table">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="vertical-align:middle">Country</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--border)">⭐ Independent <strong>Y</strong> <span style="color:var(--txt2);font-weight:500;font-size:10px">(social-only sign-up)</span></th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--border)">🏢 Independent <strong>N</strong> <span style="color:var(--txt2);font-weight:500;font-size:10px">(bundle sale)</span></th>
+                  <th rowspan="2" class="num" style="vertical-align:middle;border-left:1px solid var(--border)">∑ Total<br><span style="font-weight:500;color:#9CA3AF;font-size:9.5px">Hotels · BL%</span></th>
+                </tr>
+                <tr>
+                  <th class="num" style="border-left:1px solid var(--border)">💰 Discount<br><span style="font-weight:500;color:#9CA3AF;font-size:9.5px">Hotels · BL%</span></th>
+                  <th class="num">🎁 INM<br><span style="font-weight:500;color:#9CA3AF;font-size:9.5px">Hotels · BL%</span></th>
+                  <th class="num" style="border-left:1px solid var(--border)">💰 Discount<br><span style="font-weight:500;color:#9CA3AF;font-size:9.5px">Hotels · BL%</span></th>
+                  <th class="num">🎁 INM<br><span style="font-weight:500;color:#9CA3AF;font-size:9.5px">Hotels · BL%</span></th>
+                </tr>
+              </thead>
+              <tbody id="summary-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Block 3: Recent signups (unread) -->
+        <div class="dash-section">
+          <div class="dash-section-head">
+            <div class="dash-section-title">🆕 Recent Signups <span class="dash-section-sub">— unread, click to mark read or open in All Hotels</span></div>
+            <button class="btn btn-ghost btn-sm" onclick="markAllRead()">✓ Mark all read</button>
+          </div>
+          <div class="recent-list" id="recent-list"></div>
+        </div>
+
+        <!-- Block 4 (last): Inbound slot usage -->
+        <div class="dash-section" style="margin-bottom:0">
+          <div class="dash-section-head">
+            <div class="dash-section-title">📬 Inbound Slot Usage <span class="dash-section-sub">— cap: 96 hotels per market per month</span></div>
+            <div class="period-sw" id="month-sw"></div>
+          </div>
+          <div class="slot-grid" id="slot-grid"></div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- SCREEN: ALL HOTELS                         -->
+      <!-- ══════════════════════════════════════════ -->
+      <div id="screen-all-hotels" class="screen">
+        <div class="pg-header-wrap">
+          <div>
+            <div class="pg-title">🏨 All Hotels</div>
+            <div class="pg-sub">Complete hotel registry. Sort by any column, run pre-checks, set schedule date &amp; status, and notify the MM with one click. Switch to <strong>Editor</strong> mode (top right) to enable edits.</div>
+          </div>
+        </div>
+
+        <!-- Lock banner -->
+        <div class="lock-banner locked" id="lock-banner">
+          <div class="lock-ico">🔒</div>
+          <div class="lock-msg"><strong>Read-only mode.</strong> MMs see this view by default — campaign settings cannot be changed. Click <em>Switch to Editor</em> (or use the toggle in the top bar) and enter the password to edit schedule date, status, and pre-check details.</div>
+          <button onclick="switchMode('editor')">✏️ Switch to Editor</button>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="ah-toolbar">
+          <label>Country:</label>
+          <select id="ah-country" onchange="onCountryFilterChange()">
+            <option value="">All</option>
+            <option value="TW">TW</option>
+            <option value="HKMO">HKMO</option>
+            <option value="CN">CN</option>
+            <option value="SG">SG</option>
+          </select>
+          <label>Status:</label>
+          <select id="ah-status" onchange="renderAllHotels()">
+            <option value="">All</option>
+            <option value="received">Received</option>
+            <option value="pending">Pending for Pre-check</option>
+            <option value="failed">Pre-check Failed</option>
+            <option value="confirmed">Confirmed</option>
+          </select>
+          <label>Tier:</label>
+          <select id="ah-tier" onchange="renderAllHotels()">
+            <option value="">All tiers</option>
+            <!-- options populated by JS based on selected country -->
+          </select>
+          <label>Indep.:</label>
+          <select id="ah-indep" onchange="renderAllHotels()">
+            <option value="">All</option>
+            <option value="y">Y — social only</option>
+            <option value="n">N — bundle sale</option>
+          </select>
+          <label>Eligibility:</label>
+          <select id="ah-elig" onchange="renderAllHotels()">
+            <option value="">All</option>
+            <option value="discount">💰 Discount</option>
+            <option value="inm">🎁 INM</option>
+          </select>
+          <label>Search:</label>
+          <input type="text" id="ah-search" placeholder="HID / Hotel name / MM email…" oninput="renderAllHotels()">
+          <div class="ah-spacer"></div>
+          <span class="ah-count" id="ah-count">0 hotels</span>
+          <button class="btn btn-ghost btn-sm" onclick="renderAllHotels()">🔄 Refresh</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportHotelsCSV()">📥 Export CSV</button>
+          <button class="btn btn-ghost btn-sm editor-only" style="border-color:#FECACA;color:#DC2626" onclick="resetSeedData()" title="Wipe all hotels in localStorage and re-seed demo data">↺ Reset demo</button>
+        </div>
+
+        <div class="ah-table-wrap">
+          <table class="ah-table" id="ah-table">
+            <thead>
+              <tr id="ah-thead-row">
+                <!-- columns generated by JS so they share the sort handler -->
+              </tr>
+            </thead>
+            <tbody id="ah-tbody"></tbody>
+          </table>
+          <div id="ah-empty" class="ah-empty hidden">
+            <div class="ah-empty-icon">🏨</div>
+            <strong>No hotels match your filters.</strong>
+            Try clearing filters or use the <strong>STS Signup</strong> page to register a new hotel.
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- SCREEN: HOTEL SIGNUP FORM                  -->
+      <!-- ══════════════════════════════════════════ -->
+      <div id="screen-signup" class="screen">
+        <div class="pg-header-wrap">
+          <div>
+            <div class="pg-title">📝 Social Total Solution Program Signup</div>
+            <div class="pg-sub">Register a new hotel into the Social Total Solution (STS) program. Required fields are marked with <span style="color:var(--red);font-weight:700">*</span>. Once submitted, the hotel appears in the <strong>All Hotels</strong> list with status <span class="status-pill status-received" style="display:inline-flex">Received</span>.</div>
+          </div>
+        </div>
+
+        <form id="signup-form" onsubmit="submitSignup(event)">
+
+          <!-- Hotel Information -->
+          <div class="form-card">
+            <div class="fc-title"><div class="fc-icon">🏨</div><span>Hotel Information</span></div>
+
+            <div class="frow">
+              <div class="flabel">Your MM Email <span class="req">*</span></div>
+              <input class="finput" id="su-mmemail" type="email" placeholder="your.name@agoda.com" oninput="suValidate()" required>
+              <div class="ferr hidden" id="su-mmemail-err">⚠ Please enter a valid Agoda email.</div>
+            </div>
+
+            <div class="frow2">
+              <div class="frow">
+                <div class="flabel">Hotel Name (中文) <span class="req">*</span></div>
+                <input class="finput" id="su-name-cn" type="text" placeholder="例: W 台北" oninput="suValidate()" required>
+              </div>
+              <div class="frow">
+                <div class="flabel">Hotel Name (English) <span class="req">*</span></div>
+                <input class="finput" id="su-name-en" type="text" placeholder="e.g. W Taipei" oninput="suValidate()" required>
+              </div>
+            </div>
+
+            <!-- HID + BL% on the same row (BL% moved next to HID per spec) -->
+            <div class="frow2">
+              <div class="frow">
+                <div class="flabel">HID <span class="req">*</span> <span class="flabel-hint">(Agoda Hotel ID, numeric)</span></div>
+                <input class="finput" id="su-hid" type="text" inputmode="numeric" pattern="[0-9]+"
+                  placeholder="e.g. 1854321"
+                  oninput="this.value=this.value.replace(/\D/g,'');suValidate()" required>
+                <div class="ferr hidden" id="su-hid-err">⚠ HID is required and must be numeric.</div>
+              </div>
+              <div class="frow">
+                <div class="flabel">BL% <span class="req">*</span> <span class="flabel-hint">(business level, percentage)</span></div>
+                <div class="finput-suffix-wrap">
+                  <input class="finput" id="su-bl" type="text" inputmode="decimal" placeholder="e.g. 8.5" oninput="suValidate()" required>
+                  <span class="finput-suffix">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="frow2">
+              <div class="frow">
+                <div class="flabel">Country <span class="req">*</span></div>
+                <select class="fselect" id="su-country" onchange="onSignupCountryChange()" required>
+                  <option value="">— Select —</option>
+                  <option value="TW">TW</option>
+                  <option value="HKMO">HKMO</option>
+                  <option value="CN">CN</option>
+                  <option value="SG">SG</option>
+                </select>
+              </div>
+              <div class="frow">
+                <div class="flabel">Scheduled Exposure Date</div>
+                <input class="finput" id="su-scheduled" type="date" oninput="suValidate()">
+                <div class="fhint">Tentative — actual go-live date may shift based on real-world coordination.</div>
+              </div>
+            </div>
+
+            <div class="frow">
+              <div class="flabel">Property URL <span class="req">*</span> <span class="flabel-hint">(Agoda hotel page)</span></div>
+              <input class="finput" id="su-property-url" type="url" placeholder="https://www.agoda.com/hotel/..." oninput="suValidate()" required>
+              <div class="ferr hidden" id="su-property-url-err">⚠ URL must start with https://www.agoda.com</div>
+            </div>
+
+            <div class="frow">
+              <div class="flabel">Asset / Material Download URL <span class="req">*</span> <span class="flabel-hint">(creative materials for the campaign)</span></div>
+              <input class="finput" id="su-asset-url" type="url" placeholder="https://… (Google Drive / SharePoint / Dropbox link)" oninput="suValidate()" required>
+              <div class="ferr hidden" id="su-asset-url-err">⚠ Asset URL is required and must be a valid https:// link.</div>
+              <div class="fhint">Paste a share link to the hero image, copy, KV, BLT footer banner, etc. that the team will need to publish the campaign.</div>
+            </div>
+
+            <div class="frow" style="margin-bottom:0">
+              <div class="flabel">Video URL <span class="flabel-hint">(optional — required for TikTok publication)</span></div>
+              <input class="finput" id="su-video-url" type="url" placeholder="https://… (Drive link to a 15s vertical video)" oninput="suValidate()">
+              <div class="ferr hidden" id="su-video-url-err">⚠ If provided, must be a valid https:// link.</div>
+              <div class="fhint">If no video is provided, this hotel will <strong>not</strong> be published on TikTok / Douyin — only static placements.</div>
+            </div>
+          </div>
+
+          <!-- Tier (country-driven) — picking a tier auto-fills Eligibility + Inbound markets -->
+          <div class="form-card">
+            <div class="fc-title"><div class="fc-icon">🏷️</div><span>Tier &amp; Auto-derived Requirements</span></div>
+
+            <div class="frow">
+              <div class="flabel">Tier <span class="req">*</span> <span class="flabel-hint" id="su-tier-hint">— select Country first to see the available tiers</span></div>
+              <div class="tier-grid" id="su-tier-grid">
+                <div class="tier-empty" style="grid-column:1/-1;padding:18px;text-align:center;color:var(--txt2);font-size:12px;background:var(--bg);border:1px dashed var(--border);border-radius:9px">
+                  Tiers will appear here once you choose a country above. Each tier already carries its own commitment %, eligibility criteria and inbound source markets — you don't need to type them in.
+                </div>
+              </div>
+              <input type="hidden" id="su-tier" value="">
+              <div class="ferr hidden" id="su-tier-err">⚠ Please select a tier.</div>
+            </div>
+
+            <!-- Tier Requirements (auto-rendered from TIER_RULES once a tier is picked) -->
+            <div class="tier-req-panel" id="su-tier-req" style="display:none">
+              <!-- populated by renderTierRequirements() -->
+            </div>
+            <!-- Hidden inputs persisted on signup -->
+            <input type="hidden" id="su-elig-type" value="">
+            <input type="hidden" id="su-elig-pct" value="">
+            <div class="ferr hidden" id="su-elig-type-err" style="margin-top:8px">⚠ Please pick a hotel commitment option for this tier.</div>
+          </div>
+
+          <!-- Independent (Y/N — social-only vs bundle-sale) -->
+          <div class="form-card">
+            <div class="fc-title"><div class="fc-icon">📦</div><span>Sign-up Scope (Independent?)</span></div>
+
+            <div class="frow" style="margin-bottom:0">
+              <div class="flabel">Is this a social-only sign-up? <span class="req">*</span></div>
+              <div class="indep-toggle" id="su-indep-toggle">
+                <button type="button" data-indep="y" onclick="suSetIndep('y')">Y — social only</button>
+                <button type="button" data-indep="n" onclick="suSetIndep('n')">N — bundle sale (also sold elsewhere)</button>
+              </div>
+              <input type="hidden" id="su-indep" value="">
+              <div class="ferr hidden" id="su-indep-err">⚠ Please choose Y or N.</div>
+              <div class="fhint" style="margin-top:8px">
+                <strong>Y</strong> — the hotel is signing up <em>only</em> for the social campaign (no other bundle/package sales).<br>
+                <strong>N</strong> — the hotel is also part of bundle sales (Flagship, AMS, etc.) — please describe in the note below.
+              </div>
+            </div>
+
+            <!-- Conditional note (shown only when independent = N / bundle) -->
+            <div class="frow indep-note-wrap" id="su-indep-note-wrap" style="margin-top:14px;margin-bottom:0">
+              <div class="flabel">Bundle Sale Note (Please be specific) <span class="req">*</span> <span class="flabel-hint">— which other bundle programs &amp; chain context</span></div>
+              <textarea class="ftarea" id="su-indep-note" placeholder="Please be specific — which other bundle programs (Flagship / AMS / STS …), chain name, sub-brand, ownership, GM contact, etc." oninput="suValidate()"></textarea>
+              <div class="ferr hidden" id="su-indep-note-err">⚠ When the hotel also runs bundle sales, please describe them here.</div>
+            </div>
+          </div>
+
+          <!-- Campaign Note (general) -->
+          <div class="form-card">
+            <div class="fc-title"><div class="fc-icon">📝</div><span>Notes for Admin</span></div>
+            <div class="frow" style="margin-bottom:0">
+              <div class="flabel">General Note <span class="flabel-hint">(optional)</span></div>
+              <textarea class="ftarea" id="su-note" placeholder="Anything the campaign team should know — booking restrictions, special angle, season, etc."></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" onclick="navigate('all-hotels')">← Back to All Hotels</button>
+            <button type="button" class="btn btn-ghost" onclick="suResetForm()">Reset Form</button>
+            <button type="submit" class="btn btn-primary" id="su-submit" disabled>Submit Signup →</button>
+            <span style="font-size:12px;color:var(--txt2);margin-left:auto" id="su-hint">Fill in the required fields to enable submit.</span>
+          </div>
+        </form>
+      </div>
+
+    </div><!-- /main-scroll -->
+  </div><!-- /main-wrap -->
+</div><!-- /layout -->
+
+<!-- Toast -->
+<div id="toast" class="toast">
+  <span id="toast-icon">✅</span>
+  <span id="toast-msg">OK</span>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════════
+const STORAGE_KEY     = 'hotel_signup_hotels_v2';   // bumped — schema changed (tier-by-country, eligibilityType, eligibilityPct, videoUrl, dropped city)
+const SEED_FLAG_KEY   = 'hotel_signup_seeded_v2';
+const READ_KEY        = 'hotel_signup_read_v2';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSqS9soay85vDIjSDbOVS6e5TQd2JxCsGnEdWBqf7EXzB9Mm5SR2TD0mb-YOW24BJbzw/exec'; // ← paste after deploying Apps Script
+const EDIT_PASSWORD   = 'savi2026';
+const MARKET_CAP      = 96;           // inbound slot cap per market per month (from Inbound_Cap_Config sheet)
+
+// Markets (HK + MO consolidated into a single "HKMO" market per ops setup)
+const COUNTRIES = [
+  // Every UI surface displays the 2-5 letter code only — no flags, no long names.
+  { code:'TW'   },
+  { code:'HKMO' },
+  { code:'CN'   },
+  { code:'SG'   },
+];
+
+// Tier config per market — sourced from Standard_STS_Signup Form 2026.xlsx → Standard_Config sheet.
+// Each tier carries an icon + display label so the same key renders consistently across screens.
+// SG splits by inbound source region rather than property tier: SEA-inbound vs North-Asia-inbound.
+const TIERS_BY_COUNTRY = {
+  TW:   ['base','addon','premium'],
+  HKMO: ['base','addon'],
+  CN:   ['individual','ka'],
+  SG:   ['sgSea','sgNorthAsia'],
+};
+const TIER_DEF = {
+  base:        { label:'Base',         icon:'🥉', desc:'Standard sign-up tier' },
+  addon:       { label:'Add-on',       icon:'🥈', desc:'Includes additional placements' },
+  premium:     { label:'Premium',      icon:'🥇', desc:'Top tier (TW only)' },
+  individual:  { label:'Individual',   icon:'👤', desc:'Single-property sign-up' },
+  ka:          { label:'KA',           icon:'⭐', desc:'Key Account chain' },
+  sgSea:       { label:'SEA',          icon:'🌏', desc:'Inbound from SG/MY/TH/PH/VN/ID' },
+  sgNorthAsia: { label:'North-Asia',   icon:'🗾', desc:'Inbound from TW/HK/CN/JP/KR' },
+};
+function tierLabel(t){ const d = TIER_DEF[t]; return d ? `${d.icon} ${d.label}` : '—'; }
+
+// ── Tier rules — pulled from Standard_STS_Signup Form 2026.xlsx ──
+//   • commitments[]   : 1 or 2 commitment options the hotel can pick from
+//                       (when 2 → user picks Discount OR INM in the form)
+//   • inbound[]       : the inbound source markets where the campaign exposes
+//   • criteria        : free-text "must-meet" hotel criteria (3-Star+, BL%, etc.)
+//   • restriction     : free-text restriction on who can sign the hotel up (SAM/RAM …)
+const TIER_RULES = {
+  TW: {
+    base:    { commitments:[{type:'discount',pct:5}],                                  inbound:['TW'],                          criteria:'No additional requirements',       restriction:'' },
+    addon:   { commitments:[{type:'discount',pct:10},{type:'inm',pct:3}],              inbound:['KR','HK','JP'],                criteria:'SAM, RAM Only',                    restriction:'' },
+    premium: { commitments:[{type:'discount',pct:15},{type:'inm',pct:5}],              inbound:['TW','KR','HK','JP'],           criteria:'SAM, RAM Only',                    restriction:'' },
+  },
+  HKMO: {
+    base:    { commitments:[{type:'discount',pct:3},{type:'inm',pct:2}],               inbound:['TW','TH'],                     criteria:'No additional requirements',       restriction:'' },
+    addon:   { commitments:[{type:'discount',pct:6},{type:'inm',pct:3}],               inbound:['TW','TH','PH','KR','SG'],      criteria:'SAM, RAM Only',                    restriction:'' },
+  },
+  CN: {
+    individual: { commitments:[{type:'discount',pct:5}],                               inbound:['KR','SG','TH'],                criteria:'No additional requirements',       restriction:'' },
+    ka:         { commitments:[{type:'inm',pct:3}],                                    inbound:['KR','SG','TH','HK'],           criteria:'No additional requirements',       restriction:'' },
+  },
+  SG: {
+    sgSea:       { commitments:[{type:'discount',pct:7},{type:'inm',pct:4}],           inbound:['SG','MY','TH','PH','VN','ID'], criteria:'3-Star+ AND Guest Review 7.5+',    restriction:'' },
+    sgNorthAsia: { commitments:[{type:'discount',pct:10},{type:'inm',pct:5}],          inbound:['TW','HK','CN','JP','KR'],      criteria:'3-Star+ AND Guest Review 7.5+',    restriction:'' },
+  },
+};
+function tierRule(country, tier){ return (TIER_RULES[country] && TIER_RULES[country][tier]) || null; }
+
+// Inbound source markets render as their 2-letter code (TW / KR / HK / JP …).
+function commitmentText(c){ return c.type === 'discount' ? `${c.pct}% excl discount` : `${c.pct}% INM`; }
+
+const STATUS_LABEL = {
+  received:  '📥 Received',
+  pending:   '⏳ Pending Pre-check',
+  failed:    '🔴 Pre-check Failed',
+  confirmed: '✅ Confirmed',
+};
+
+// All Hotels columns — single source of truth (used for header render + sort handler + CSV export)
+const COLUMNS = [
+  { key:'hid',           label:'HID',             sortable:true,  align:'left' },
+  { key:'name',          label:'Hotel (CN / EN)', sortable:true,  align:'left' },
+  { key:'country',       label:'Country',         sortable:true,  align:'left' },
+  { key:'tier',          label:'Tier',            sortable:true,  align:'left' },
+  { key:'independent',   label:'Indep.',          sortable:true,  align:'left' },
+  { key:'eligibility',   label:'Eligibility',     sortable:true,  align:'left' },
+  { key:'bl',            label:'BL%',             sortable:true,  align:'right' },
+  { key:'propertyUrl',   label:'Property URL',    sortable:false, align:'left' },
+  { key:'assetUrl',      label:'Asset URL',       sortable:false, align:'left' },
+  { key:'videoUrl',      label:'Video URL',       sortable:false, align:'left' },
+  { key:'mmEmail',       label:'MM',              sortable:true,  align:'left' },
+  { key:'scheduledDate', label:'Scheduled Exposure Date', sortable:true,  align:'left' },
+  { key:'status',        label:'Status',          sortable:true,  align:'left' },
+  { key:'submittedAt',   label:'Signed Up',       sortable:true,  align:'left' },
+  { key:'__actions',     label:'Actions',         sortable:false, align:'left' },
+];
+
+// ══════════════════════════════════════════════════════════════
+// State
+// ══════════════════════════════════════════════════════════════
+let hotels = [];
+let readSet = new Set();
+let currentScreen = 'dashboard';
+
+let selectedQuarter = currentQuarterStr();   // e.g. "2026-Q2"
+let selectedMonth   = currentMonthStr();     // e.g. "2026-05"
+let countryScope    = 'all';                 // 'all' | 'quarter'
+
+let sortKey = 'submittedAt';
+let sortAsc = false;
+let expandedPrecheckId = null;
+
+// ══════════════════════════════════════════════════════════════
+// Persistence
+// ══════════════════════════════════════════════════════════════
+function loadHotels(){
+  try {
+    const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    return Array.isArray(arr) ? arr : [];
+  } catch(e){ return []; }
+}
+function saveHotels(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(hotels)); }
+function loadRead(){
+  try {
+    const arr = JSON.parse(localStorage.getItem(READ_KEY) || '[]');
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch(e){ return new Set(); }
+}
+function saveRead(){ localStorage.setItem(READ_KEY, JSON.stringify([...readSet])); }
+
+// ══════════════════════════════════════════════════════════════
+// Date helpers
+// ══════════════════════════════════════════════════════════════
+function pad2(n){ return String(n).padStart(2,'0'); }
+function toQuarter(d){
+  const dt = new Date(d);
+  const y = dt.getFullYear();
+  const q = Math.floor(dt.getMonth()/3) + 1;
+  return `${y}-Q${q}`;
+}
+function toMonth(d){
+  const dt = new Date(d);
+  return `${dt.getFullYear()}-${pad2(dt.getMonth()+1)}`;
+}
+function currentQuarterStr(){ return toQuarter(new Date()); }
+function currentMonthStr(){ return toMonth(new Date()); }
+function quarterRange(qStr){
+  const [y,q] = qStr.split('-Q').map(Number);
+  const startMonth = (q-1)*3;
+  return { from:new Date(y,startMonth,1), to:new Date(y,startMonth+3,0,23,59,59) };
+}
+function monthRange(mStr){
+  const [y,m] = mStr.split('-').map(Number);
+  return { from:new Date(y,m-1,1), to:new Date(y,m,0,23,59,59) };
+}
+function fmtDate(s){
+  if(!s) return '—';
+  const d = new Date(s);
+  if(isNaN(d.getTime())) return s;
+  return `${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())}`;
+}
+function fmtDateTime(s){
+  if(!s) return '—';
+  const d = new Date(s);
+  if(isNaN(d.getTime())) return s;
+  return `${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// Utilities
+// ══════════════════════════════════════════════════════════════
+function escapeHtml(s){
+  if(s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+function toast(msg, icon='✅'){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function genId(){
+  const d = new Date();
+  return `HSU-${d.getFullYear()}-${pad2(d.getMonth()+1)}${pad2(d.getDate())}-${Math.floor(Math.random()*9000+1000)}`;
+}
+// Country display: just the 2-5 letter code (TW / HKMO / CN / SG).
+function countryName(code){ return code || '—'; }
+
+// ══════════════════════════════════════════════════════════════
+// Seed data — covers a few quarters + countries so dashboard is interesting
+// ══════════════════════════════════════════════════════════════
+function seedData(){
+  const today = new Date();
+  const daysAgo = n => new Date(today.getTime() - n*86400000).toISOString();
+  // Note: inboundMarkets is auto-derived from TIER_RULES in postProcessSeed()
+  return [
+    // ── Q2 2026 (current) ──
+    { id:'HSU-2026-0510-1001', hidCn:'W 台北', hidEn:'W Taipei', hid:'1854321', bl:9.2, country:'TW',
+      tier:'premium', independent:'n', independentNote:'Marriott International — W Hotels sub-brand, bundle sale enabled',
+      eligibilityType:'discount', eligibilityPct:18,
+      propertyUrl:'https://www.agoda.com/hotel/w-taipei',
+      assetUrl:'https://drive.google.com/drive/folders/w-taipei-assets',
+      videoUrl:'https://drive.google.com/file/d/w-taipei-15s.mp4',
+      mmEmail:'jenny.chen@agoda.com', scheduledDate:'2026-06-15', status:'confirmed',
+      note:'Strong KOL appeal, lobby photogenic.', submittedAt:daysAgo(2),
+      precheckHistory:[
+        { when:daysAgo(1), result:'pass',
+          ppPre:100, ppDur:118, poPre:100, poDur:112, uplift:'+18.0%',
+          screenshot:'https://drive.google.com/file/d/abc/view',
+          notes:'Solid uplift on weekday segment.' }
+      ],
+      statusHistory:[ {when:daysAgo(2),s:'received'},{when:daysAgo(1),s:'pending'},{when:daysAgo(1),s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0508-1002', hidCn:'晶華酒店', hidEn:'Regent Taipei', hid:'1234567', bl:7.8, country:'TW',
+      tier:'addon', independent:'n', independentNote:'Silks Hotel Group flagship — bundle sale via parent group',
+      eligibilityType:'inm', eligibilityPct:12,
+      propertyUrl:'https://www.agoda.com/hotel/regent-taipei',
+      assetUrl:'https://sharepoint.com/regent-assets',
+      videoUrl:'',
+      mmEmail:'jenny.chen@agoda.com', scheduledDate:'2026-06-22', status:'pending',
+      note:'', submittedAt:daysAgo(4),
+      precheckHistory:[],
+      statusHistory:[ {when:daysAgo(4),s:'received'},{when:daysAgo(3),s:'pending'} ]
+    },
+    { id:'HSU-2026-0506-1003', hidCn:'寒舍艾美酒店', hidEn:'Le Méridien Taipei', hid:'2456789', bl:6.4, country:'TW',
+      tier:'base', independent:'n', independentNote:'Marriott — Le Méridien sub-brand',
+      eligibilityType:'discount', eligibilityPct:15,
+      propertyUrl:'https://www.agoda.com/hotel/le-meridien-taipei',
+      assetUrl:'https://drive.google.com/drive/folders/le-meridien-tpe',
+      videoUrl:'',
+      mmEmail:'jenny.chen@agoda.com', scheduledDate:'', status:'received',
+      note:'New onboarding, awaiting brief.', submittedAt:daysAgo(6),
+      precheckHistory:[], statusHistory:[ {when:daysAgo(6),s:'received'} ]
+    },
+    { id:'HSU-2026-0505-1004', hidCn:'承億文旅 高雄館', hidEn:'Chuyi Hotel Kaohsiung', hid:'3456789', bl:4.1, country:'TW',
+      tier:'base', independent:'y', independentNote:'',
+      eligibilityType:'discount', eligibilityPct:10,
+      propertyUrl:'https://www.agoda.com/hotel/chuyi-kh',
+      assetUrl:'https://drive.google.com/drive/folders/chuyi-kh',
+      videoUrl:'',
+      mmEmail:'amy.lin@agoda.com', scheduledDate:'2026-07-05', status:'failed',
+      note:'Pre-check failed — pricing too aggressive vs baseline.', submittedAt:daysAgo(8),
+      precheckHistory:[
+        { when:daysAgo(3), result:'fail',
+          ppPre:100, ppDur:95, poPre:100, poDur:97, uplift:'-5.0%',
+          screenshot:'https://drive.google.com/file/d/xyz/view',
+          notes:'Hotel ran a competing flash sale during the window.' }
+      ],
+      statusHistory:[ {when:daysAgo(8),s:'received'},{when:daysAgo(5),s:'pending'},{when:daysAgo(3),s:'failed'} ]
+    },
+    { id:'HSU-2026-0503-1005', hidCn:'香港麗思卡爾頓酒店', hidEn:'The Ritz-Carlton Hong Kong', hid:'4567890', bl:8.7, country:'HKMO',
+      tier:'addon', independent:'n', independentNote:'Marriott International — Ritz-Carlton',
+      eligibilityType:'inm', eligibilityPct:14,
+      propertyUrl:'https://www.agoda.com/hotel/ritz-carlton-hk',
+      assetUrl:'https://sharepoint.com/rc-hk',
+      videoUrl:'https://drive.google.com/file/d/rc-hk-15s.mp4',
+      mmEmail:'kelly.wong@agoda.com', scheduledDate:'2026-06-01', status:'confirmed',
+      note:'', submittedAt:daysAgo(10),
+      precheckHistory:[
+        { when:daysAgo(4), result:'pass',
+          ppPre:100, ppDur:113, poPre:100, poDur:108, uplift:'+13.0%',
+          screenshot:'', notes:'' }
+      ],
+      statusHistory:[ {when:daysAgo(10),s:'received'},{when:daysAgo(7),s:'pending'},{when:daysAgo(4),s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0501-1006', hidCn:'香港文華東方酒店', hidEn:'Mandarin Oriental Hong Kong', hid:'5678901', bl:9.5, country:'HKMO',
+      tier:'addon', independent:'n', independentNote:'Mandarin Oriental Hotel Group',
+      eligibilityType:'discount', eligibilityPct:20,
+      propertyUrl:'https://www.agoda.com/hotel/mo-hk',
+      assetUrl:'https://drive.google.com/drive/folders/mo-hk',
+      videoUrl:'',
+      mmEmail:'kelly.wong@agoda.com', scheduledDate:'', status:'received',
+      note:'Just signed up.', submittedAt:daysAgo(1),
+      precheckHistory:[], statusHistory:[ {when:daysAgo(1),s:'received'} ]
+    },
+    { id:'HSU-2026-0428-1007', hidCn:'Marina Bay Sands', hidEn:'Marina Bay Sands', hid:'6789012', bl:7.2, country:'SG',
+      tier:'sgSea', independent:'n', independentNote:'Las Vegas Sands Corp.',
+      eligibilityType:'discount', eligibilityPct:12,
+      propertyUrl:'https://www.agoda.com/hotel/mbs',
+      assetUrl:'https://drive.google.com/drive/folders/mbs',
+      videoUrl:'https://drive.google.com/file/d/mbs-15s.mp4',
+      mmEmail:'rachel.tan@agoda.com', scheduledDate:'2026-06-30', status:'pending',
+      note:'', submittedAt:daysAgo(13),
+      precheckHistory:[], statusHistory:[ {when:daysAgo(13),s:'received'},{when:daysAgo(10),s:'pending'} ]
+    },
+    { id:'HSU-2026-0425-1008', hidCn:'Hotel Indigo Singapore', hidEn:'Hotel Indigo Singapore Katong', hid:'7890123', bl:5.6, country:'SG',
+      tier:'sgNorthAsia', independent:'n', independentNote:'IHG Hotels & Resorts',
+      eligibilityType:'inm', eligibilityPct:10,
+      propertyUrl:'https://www.agoda.com/hotel/indigo-katong',
+      assetUrl:'https://drive.google.com/drive/folders/indigo-katong',
+      videoUrl:'',
+      mmEmail:'rachel.tan@agoda.com', scheduledDate:'', status:'received',
+      note:'', submittedAt:daysAgo(16),
+      precheckHistory:[], statusHistory:[ {when:daysAgo(16),s:'received'} ]
+    },
+    { id:'HSU-2026-0420-1009', hidCn:'澳門威尼斯人', hidEn:'The Venetian Macao', hid:'8901234', bl:6.9, country:'HKMO',
+      tier:'addon', independent:'n', independentNote:'Sands China',
+      eligibilityType:'discount', eligibilityPct:16,
+      propertyUrl:'https://www.agoda.com/hotel/venetian-macao',
+      assetUrl:'https://drive.google.com/drive/folders/venetian',
+      videoUrl:'',
+      mmEmail:'kelly.wong@agoda.com', scheduledDate:'2026-07-12', status:'confirmed',
+      note:'', submittedAt:daysAgo(21),
+      precheckHistory:[
+        { when:daysAgo(15), result:'pass',
+          ppPre:100, ppDur:109, poPre:100, poDur:107, uplift:'+9.0%',
+          screenshot:'', notes:'' }
+      ],
+      statusHistory:[ {when:daysAgo(21),s:'received'},{when:daysAgo(18),s:'pending'},{when:daysAgo(15),s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0418-1010', hidCn:'墾丁福華渡假飯店', hidEn:'Howard Beach Resort Kenting', hid:'9012345', bl:3.8, country:'TW',
+      tier:'base', independent:'y', independentNote:'',
+      eligibilityType:'discount', eligibilityPct:8,
+      propertyUrl:'https://www.agoda.com/hotel/howard-kenting',
+      assetUrl:'https://drive.google.com/drive/folders/howard-kenting',
+      videoUrl:'',
+      mmEmail:'amy.lin@agoda.com', scheduledDate:'', status:'pending',
+      note:'', submittedAt:daysAgo(23),
+      precheckHistory:[], statusHistory:[ {when:daysAgo(23),s:'received'},{when:daysAgo(20),s:'pending'} ]
+    },
+    // ── Q1 2026 ──
+    { id:'HSU-2026-0220-2001', hidCn:'寶格麗酒店 上海', hidEn:'Bulgari Hotel Shanghai', hid:'1011121', bl:8.4, country:'CN',
+      tier:'ka', independent:'n', independentNote:'Marriott — Bulgari',
+      eligibilityType:'inm', eligibilityPct:18,
+      propertyUrl:'https://www.agoda.com/hotel/bulgari-sh',
+      assetUrl:'https://sharepoint.com/bulgari-sh',
+      videoUrl:'',
+      mmEmail:'henry.zhang@agoda.com', scheduledDate:'2026-03-10', status:'confirmed',
+      note:'', submittedAt:'2026-02-20T08:00:00Z',
+      precheckHistory:[
+        { when:'2026-03-04T10:00:00Z', result:'pass',
+          ppPre:100, ppDur:116, poPre:100, poDur:111, uplift:'+15.6%',
+          screenshot:'', notes:'' }
+      ],
+      statusHistory:[ {when:'2026-02-20T08:00:00Z',s:'received'},{when:'2026-03-01T09:00:00Z',s:'pending'},{when:'2026-03-04T10:00:00Z',s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0301-2002', hidCn:'廣州W酒店', hidEn:'W Guangzhou', hid:'1213141', bl:7.1, country:'CN',
+      tier:'ka', independent:'n', independentNote:'Marriott — W Hotels',
+      eligibilityType:'discount', eligibilityPct:15,
+      propertyUrl:'https://www.agoda.com/hotel/w-gz',
+      assetUrl:'https://drive.google.com/drive/folders/w-gz',
+      videoUrl:'',
+      mmEmail:'henry.zhang@agoda.com', scheduledDate:'2026-04-05', status:'confirmed',
+      note:'', submittedAt:'2026-03-01T09:00:00Z',
+      precheckHistory:[], statusHistory:[ {when:'2026-03-01T09:00:00Z',s:'received'},{when:'2026-04-01T09:00:00Z',s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0315-2003', hidCn:'錦江之星 上海', hidEn:'Jin Jiang Inn Shanghai', hid:'1415161', bl:4.6, country:'CN',
+      tier:'individual', independent:'y', independentNote:'',
+      eligibilityType:'discount', eligibilityPct:7,
+      propertyUrl:'https://www.agoda.com/hotel/jinjiang-sh',
+      assetUrl:'https://drive.google.com/drive/folders/jinjiang-sh',
+      videoUrl:'',
+      mmEmail:'henry.zhang@agoda.com', scheduledDate:'2026-04-20', status:'confirmed',
+      note:'', submittedAt:'2026-03-15T09:00:00Z',
+      precheckHistory:[], statusHistory:[ {when:'2026-03-15T09:00:00Z',s:'received'},{when:'2026-04-15T09:00:00Z',s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0102-2004', hidCn:'北投麗禧溫泉酒店', hidEn:'Grand View Resort Beitou', hid:'1617181', bl:4.9, country:'TW',
+      tier:'addon', independent:'y', independentNote:'',
+      eligibilityType:'discount', eligibilityPct:10,
+      propertyUrl:'https://www.agoda.com/hotel/grand-view-beitou',
+      assetUrl:'https://drive.google.com/drive/folders/grand-view',
+      videoUrl:'',
+      mmEmail:'amy.lin@agoda.com', scheduledDate:'2026-02-15', status:'confirmed',
+      note:'', submittedAt:'2026-01-02T09:00:00Z',
+      precheckHistory:[], statusHistory:[ {when:'2026-01-02T09:00:00Z',s:'received'},{when:'2026-02-01T09:00:00Z',s:'confirmed'} ]
+    },
+    { id:'HSU-2026-0315-2005', hidCn:'阿里山賓館', hidEn:'Alishan House', hid:'1819202', bl:3.2, country:'TW',
+      tier:'base', independent:'y', independentNote:'',
+      eligibilityType:'inm', eligibilityPct:6,
+      propertyUrl:'https://www.agoda.com/hotel/alishan-house',
+      assetUrl:'https://drive.google.com/drive/folders/alishan',
+      videoUrl:'',
+      mmEmail:'amy.lin@agoda.com', scheduledDate:'', status:'received',
+      note:'Independent boutique; social-only sign-up.', submittedAt:'2026-03-15T09:00:00Z',
+      precheckHistory:[], statusHistory:[ {when:'2026-03-15T09:00:00Z',s:'received'} ]
+    },
+    // ── Q4 2025 ──
+    { id:'HSU-2025-1115-3001', hidCn:'帝苑酒店', hidEn:'Royal Garden Hotel HK', hid:'2122232', bl:5.3, country:'HKMO',
+      tier:'base', independent:'y', independentNote:'',
+      eligibilityType:'discount', eligibilityPct:8,
+      propertyUrl:'https://www.agoda.com/hotel/royal-garden-hk',
+      assetUrl:'https://drive.google.com/drive/folders/royal-garden',
+      videoUrl:'',
+      mmEmail:'kelly.wong@agoda.com', scheduledDate:'2025-12-10', status:'confirmed',
+      note:'', submittedAt:'2025-11-15T09:00:00Z',
+      precheckHistory:[], statusHistory:[ {when:'2025-11-15T09:00:00Z',s:'received'},{when:'2025-12-01T09:00:00Z',s:'confirmed'} ]
+    },
+  ];
+}
+
+// Auto-derive `inboundMarkets` + sensible default commitment period (≥14 days)
+// for any record missing them — keeps older / seed entries in sync with TIER_RULES
+// and the new "Commitment Period" requirement.
+function backfillInboundMarkets(list){
+  const today = new Date();
+  const iso = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  list.forEach(h => {
+    if(!h.inboundMarkets || h.inboundMarkets.length === 0){
+      const r = tierRule(h.country, h.tier);
+      if(r) h.inboundMarkets = r.inbound.slice();
+    }
+    if(!h.commitmentStart || !h.commitmentEnd){
+      // Anchor to scheduledDate when present, else +7d from signup; always 14 days long
+      const anchor = h.scheduledDate ? new Date(h.scheduledDate) : new Date((new Date(h.submittedAt||today)).getTime() + 7*86400000);
+      const start = new Date(anchor.getTime() - 13*86400000); // anchor inclusive end → 14-day window
+      h.commitmentStart = h.commitmentStart || iso(start);
+      h.commitmentEnd   = h.commitmentEnd   || iso(anchor);
+    }
+  });
+  return list;
+}
+
+// ══════════════════════════════════════════════════════════════
+// Init
+// ══════════════════════════════════════════════════════════════
+function init(){
+  hotels = loadHotels();
+  if(hotels.length === 0 && !localStorage.getItem(SEED_FLAG_KEY)){
+    hotels = backfillInboundMarkets(seedData());
+    saveHotels();
+    localStorage.setItem(SEED_FLAG_KEY, '1');
+  } else {
+    backfillInboundMarkets(hotels);
+  }
+  readSet = loadRead();
+  buildPeriodSwitchers();
+  buildAhTableHead();
+  rebuildTierFilter();
+  navigate('dashboard');
+  updateSidebarCounts();
+}
+
+function resetSeedData(){
+  if(!confirm('Wipe all hotels and re-seed demo data? This cannot be undone.')) return;
+  hotels = backfillInboundMarkets(seedData());
+  readSet = new Set();
+  saveHotels();
+  saveRead();
+  localStorage.setItem(SEED_FLAG_KEY, '1');
+  updateSidebarCounts();
+  if(currentScreen==='dashboard') renderDashboard();
+  if(currentScreen==='all-hotels') renderAllHotels();
+  toast('Demo data reset', '↺');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Navigation
+// ══════════════════════════════════════════════════════════════
+function navigate(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById(`screen-${screen}`);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(e=>e.classList.remove('active'));
+  const sbMap = { 'dashboard':'sb-dashboard', 'all-hotels':'sb-all-hotels', 'signup':'sb-signup' };
+  document.getElementById(sbMap[screen])?.classList.add('active');
+  document.getElementById('main-scroll').scrollTop = 0;
+  currentScreen = screen;
+  if(screen==='dashboard') renderDashboard();
+  if(screen==='all-hotels') renderAllHotels();
+  if(screen==='signup') resetSignupForm();
+}
+
+// ══════════════════════════════════════════════════════════════
+// Google Sheets sync
+// ══════════════════════════════════════════════════════════════
+async function sheetsWrite(data) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PASTE')) return;
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'write', key: 'sts_signups', data })
+    });
+  } catch(e) { console.warn('[SAVI] STS Sheets write failed:', e.message); }
+}
+
+async function sheetsReadAll() {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PASTE')) return null;
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'read', key: 'sts_signups' })
+    });
+    const json = await res.json();
+    return json.ok ? json.data : null;
+  } catch(e) { console.warn('[SAVI] STS Sheets read failed:', e.message); return null; }
+}
+
+async function syncFromSheets() {
+  const remote = await sheetsReadAll();
+  if (!remote || !remote.length) return;
+  try {
+    const local = JSON.parse(localStorage.getItem('sts_2026') || '[]');
+    const localIds = new Set(local.map(r => String(r.id)));
+    const newItems = remote.filter(r => !localIds.has(String(r.id)));
+    if (newItems.length) {
+      hotels = [...newItems, ...local];
+      saveHotels();
+      updateSidebarCounts();
+      console.log('[SAVI] STS +' + newItems.length + ' synced from Sheets');
+    }
+  } catch(e) { console.warn('[SAVI] STS sync error:', e.message); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// Mode toggle (read-only ↔ editor with password)
+// ══════════════════════════════════════════════════════════════
+function switchMode(mode){
+  if(mode === 'editor'){
+    if(document.body.classList.contains('locked') === false) return;
+    const pw = prompt('Editor mode requires a password. Please enter the admin password:');
+    if(pw === null) return;
+    if(pw !== EDIT_PASSWORD){
+      toast('Wrong password — staying in read-only mode.', '🚫');
+      return;
+    }
+    document.body.classList.remove('locked');
+    document.getElementById('mode-readonly').classList.remove('active');
+    document.getElementById('mode-editor').classList.add('active');
+    const lb = document.getElementById('lock-banner');
+    if(lb){
+      lb.classList.remove('locked'); lb.classList.add('unlocked');
+      lb.querySelector('.lock-ico').textContent = '🔓';
+      lb.querySelector('.lock-msg').innerHTML = '<strong>Editor mode unlocked.</strong> You can now edit schedule date, status, asset URL, and run pre-checks. Switch back to <em>Read-only</em> when you\'re done.';
+      lb.querySelector('button').textContent = '🔒 Lock';
+      lb.querySelector('button').onclick = () => switchMode('readonly');
+    }
+    if(currentScreen==='all-hotels') renderAllHotels();
+    toast('Editor mode unlocked.', '🔓');
+  } else {
+    document.body.classList.add('locked');
+    document.getElementById('mode-readonly').classList.add('active');
+    document.getElementById('mode-editor').classList.remove('active');
+    const lb = document.getElementById('lock-banner');
+    if(lb){
+      lb.classList.remove('unlocked'); lb.classList.add('locked');
+      lb.querySelector('.lock-ico').textContent = '🔒';
+      lb.querySelector('.lock-msg').innerHTML = '<strong>Read-only mode.</strong> MMs see this view by default — campaign settings cannot be changed. Click <em>Switch to Editor</em> (or use the toggle in the top bar) and enter the password to edit schedule date, status, and pre-check details.';
+      lb.querySelector('button').textContent = '✏️ Switch to Editor';
+      lb.querySelector('button').onclick = () => switchMode('editor');
+    }
+    if(currentScreen==='all-hotels') renderAllHotels();
+    toast('Now in read-only mode.', '🔒');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// Period switchers
+// ══════════════════════════════════════════════════════════════
+function buildPeriodSwitchers(){
+  // Quarters: surface the last 4 quarters that actually have data + the current
+  const quartersWithData = [...new Set(hotels.map(h=>toQuarter(h.submittedAt)))].sort();
+  const cur = currentQuarterStr();
+  const all = [...new Set([...quartersWithData, cur])].sort();
+  // keep at most last 6 quarters for compactness
+  const trimmed = all.slice(-6);
+  if(!trimmed.includes(selectedQuarter)) selectedQuarter = trimmed[trimmed.length-1] || cur;
+  const qs = document.getElementById('quarter-sw');
+  qs.innerHTML = trimmed.map(q => {
+    const active = q === selectedQuarter ? ' active' : '';
+    return `<button class="period-btn${active}" onclick="setQuarter('${q}')">${q}</button>`;
+  }).join('');
+
+  // Months for inbound slot
+  const monthsWithData = [...new Set(hotels.map(h=>toMonth(h.submittedAt)))].sort();
+  const curM = currentMonthStr();
+  const allM = [...new Set([...monthsWithData, curM])].sort().slice(-6);
+  if(!allM.includes(selectedMonth)) selectedMonth = allM[allM.length-1] || curM;
+  const ms = document.getElementById('month-sw');
+  ms.innerHTML = allM.map(m => {
+    const active = m === selectedMonth ? ' active' : '';
+    return `<button class="period-btn${active}" onclick="setMonth('${m}')">${m}</button>`;
+  }).join('');
+}
+function setQuarter(q){
+  selectedQuarter = q;
+  buildPeriodSwitchers();
+  renderQuarterKpi();
+  renderCountrySummary();
+}
+function setMonth(m){
+  selectedMonth = m;
+  buildPeriodSwitchers();
+  renderInboundSlots();
+}
+function setCountrySummaryScope(scope){
+  countryScope = scope;
+  document.getElementById('ctry-all').classList.toggle('active', scope==='all');
+  document.getElementById('ctry-q').classList.toggle('active', scope==='quarter');
+  renderCountrySummary();
+}
+
+// ══════════════════════════════════════════════════════════════
+// DASHBOARD render
+// ══════════════════════════════════════════════════════════════
+function renderDashboard(){
+  buildPeriodSwitchers();
+  renderQuarterKpi();
+  renderCountrySummary();
+  renderRecentSignups();
+  renderInboundSlots();
+}
+
+// ── Block 1: Quarter KPI — split by country + total ──────────
+function renderQuarterKpi(){
+  const { from, to } = quarterRange(selectedQuarter);
+  const inQ = hotels.filter(h => {
+    const t = new Date(h.submittedAt);
+    return t >= from && t <= to;
+  });
+
+  // Per-country split
+  const byC = {};
+  COUNTRIES.forEach(c => byC[c.code] = { n:0, bl:0, conf:0, fail:0 });
+  inQ.forEach(h => {
+    if(!byC[h.country]) byC[h.country] = { n:0, bl:0, conf:0, fail:0 };
+    byC[h.country].n  += 1;
+    byC[h.country].bl += parseFloat(h.bl) || 0;
+    if(h.status === 'confirmed') byC[h.country].conf += 1;
+    if(h.status === 'failed')    byC[h.country].fail += 1;
+  });
+
+  const totN  = inQ.length;
+  const totBl = inQ.reduce((s,h)=>s + (parseFloat(h.bl)||0), 0);
+  const totConf = inQ.filter(h=>h.status==='confirmed').length;
+  const totFail = inQ.filter(h=>h.status==='failed').length;
+
+  const countryCards = COUNTRIES.map(c => {
+    const r = byC[c.code] || { n:0, bl:0, conf:0, fail:0 };
+    return `
+      <div class="kpi-card accent">
+        <div class="kpi-label">${escapeHtml(c.code)}</div>
+        <div class="kpi-value">${r.n} <span class="kpi-unit">hotel${r.n===1?'':'s'}</span></div>
+        <div class="kpi-sub">∑ BL <strong style="color:#1E40AF">${r.bl.toFixed(1)}%</strong> · ✅ ${r.conf} · 🔴 ${r.fail}</div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('quarter-kpi').innerHTML = `
+    ${countryCards}
+    <div class="kpi-card accent2" style="grid-column:span 1">
+      <div class="kpi-label">∑ Total — ${escapeHtml(selectedQuarter)}</div>
+      <div class="kpi-value">${totN} <span class="kpi-unit">hotels · ${totBl.toFixed(1)}% BL</span></div>
+      <div class="kpi-sub">✅ Confirmed ${totConf} · 🔴 Failed ${totFail}</div>
+    </div>
+  `;
+}
+
+// ── Block 2: By-country summary — Independent Y/N × Discount/INM ──
+function renderCountrySummary(){
+  let scope = hotels;
+  if(countryScope === 'quarter'){
+    const { from, to } = quarterRange(selectedQuarter);
+    scope = hotels.filter(h => {
+      const t = new Date(h.submittedAt);
+      return t >= from && t <= to;
+    });
+  }
+  // Per-country: 4 buckets = independent(y/n) × eligibility(discount/inm)
+  const rowsByCountry = {};
+  const empty = () => ({ yDis:{n:0,bl:0}, yInm:{n:0,bl:0}, nDis:{n:0,bl:0}, nInm:{n:0,bl:0} });
+
+  scope.forEach(h => {
+    const c = h.country || 'XX';
+    if(!rowsByCountry[c]) rowsByCountry[c] = empty();
+    const indep = (h.independent === 'y') ? 'y' : (h.independent === 'n' ? 'n' : null);
+    const elig  = (h.eligibilityType === 'discount') ? 'Dis' : (h.eligibilityType === 'inm' ? 'Inm' : null);
+    if(!indep || !elig) return; // skip rows missing classification
+    const key = indep + elig;   // yDis / yInm / nDis / nInm
+    rowsByCountry[c][key].n  += 1;
+    rowsByCountry[c][key].bl += parseFloat(h.bl) || 0;
+  });
+
+  // Always render rows for known markets (in COUNTRIES order), then append any unknown country with data
+  const known = COUNTRIES.map(c => c.code);
+  const others = Object.keys(rowsByCountry).filter(c => !known.includes(c)).sort();
+  const order = [...known, ...others].filter(c => rowsByCountry[c]);
+
+  if(order.length === 0){
+    document.getElementById('summary-tbody').innerHTML =
+      `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--txt2);font-style:italic">No data in scope. Try switching to "All Time".</td></tr>`;
+    return;
+  }
+
+  const cellHtml = (cell) => cell.n === 0
+    ? `<span style="color:#D1D5DB">—</span>`
+    : `<span style="color:var(--navy)">${cell.n}</span> · <span style="color:#1E40AF">${cell.bl.toFixed(1)}%</span>`;
+
+  const totals = empty();
+  let html = '';
+  order.forEach(c => {
+    const r = rowsByCountry[c];
+    const totN  = r.yDis.n + r.yInm.n + r.nDis.n + r.nInm.n;
+    const totBl = r.yDis.bl + r.yInm.bl + r.nDis.bl + r.nInm.bl;
+    ['yDis','yInm','nDis','nInm'].forEach(k => { totals[k].n += r[k].n; totals[k].bl += r[k].bl; });
+    html += `<tr>
+      <td><strong style="color:var(--navy)">${escapeHtml(c)}</strong></td>
+      <td class="num" style="border-left:1px solid var(--border)">${cellHtml(r.yDis)}</td>
+      <td class="num">${cellHtml(r.yInm)}</td>
+      <td class="num" style="border-left:1px solid var(--border)">${cellHtml(r.nDis)}</td>
+      <td class="num">${cellHtml(r.nInm)}</td>
+      <td class="num" style="border-left:1px solid var(--border)"><strong style="color:var(--navy)">${totN}</strong> · <strong style="color:#1E40AF">${totBl.toFixed(1)}%</strong></td>
+    </tr>`;
+  });
+  const grandN  = totals.yDis.n + totals.yInm.n + totals.nDis.n + totals.nInm.n;
+  const grandBl = totals.yDis.bl + totals.yInm.bl + totals.nDis.bl + totals.nInm.bl;
+  html += `<tr class="summary-row">
+    <td>∑ Total</td>
+    <td class="num" style="border-left:1px solid var(--border)">${cellHtml(totals.yDis)}</td>
+    <td class="num">${cellHtml(totals.yInm)}</td>
+    <td class="num" style="border-left:1px solid var(--border)">${cellHtml(totals.nDis)}</td>
+    <td class="num">${cellHtml(totals.nInm)}</td>
+    <td class="num" style="border-left:1px solid var(--border)">${grandN} · ${grandBl.toFixed(1)}%</td>
+  </tr>`;
+  document.getElementById('summary-tbody').innerHTML = html;
+}
+
+// ── Block 3: Recent signups (unread) ────────────────────────
+function renderRecentSignups(){
+  const sorted = [...hotels].sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  const unread = sorted.filter(h => !readSet.has(h.id)).slice(0, 12);
+  const list = document.getElementById('recent-list');
+  if(unread.length === 0){
+    list.innerHTML = `<div class="recent-empty">🎉 You're all caught up — no unread signups.</div>`;
+    return;
+  }
+  list.innerHTML = unread.map(h => {
+    const isRead = readSet.has(h.id);
+    return `
+      <div class="recent-card${isRead?' read':''}" onclick="markRead('${h.id}'); navigate('all-hotels')">
+        <div class="recent-icon">🏨</div>
+        <div class="recent-info">
+          <div class="recent-hotel">
+            ${!isRead ? '<span class="recent-unread-dot"></span>' : ''}
+            ${escapeHtml(h.hidCn || h.hidEn)} <span style="color:var(--txt2);font-weight:500;font-size:11px">${escapeHtml(h.hidEn||'')}</span>
+            <span class="recent-hid">HID ${escapeHtml(h.hid)}</span>
+            <span class="recent-bl">BL ${(+h.bl||0).toFixed(1)}%</span>
+            <span style="font-size:10.5px;font-weight:700;color:var(--navy);background:#F3F4F6;padding:1px 7px;border-radius:5px;border:1px solid var(--border)">${tierLabel(h.tier)}</span>
+          </div>
+          <div class="recent-meta">
+            <strong>${escapeHtml(h.country||'—')}</strong> ·
+            ${h.independent==='y'?'<span style="color:#6B21A8;font-weight:700">Indep. Y</span>':h.independent==='n'?'<span style="color:#1E40AF;font-weight:700">Indep. N</span>':''} ·
+            ${h.eligibilityType?`${h.eligibilityType==='discount'?'💰 Discount':'🎁 INM'} <strong>${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%</strong> · `:''}MM <strong>${escapeHtml(h.mmEmail||'—')}</strong> · Signed up <strong>${fmtDateTime(h.submittedAt)}</strong>
+          </div>
+        </div>
+        <div class="recent-actions">
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();markRead('${h.id}')">✓ Mark read</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+function markRead(id){
+  readSet.add(id);
+  saveRead();
+  updateSidebarCounts();
+  renderRecentSignups();
+  toast('Marked as read', '✓');
+}
+function markAllRead(){
+  hotels.forEach(h => readSet.add(h.id));
+  saveRead();
+  updateSidebarCounts();
+  renderRecentSignups();
+  toast('All marked as read', '✓');
+}
+
+// ── Block 4: Inbound slot usage (cap 96 / market / month) ────
+function renderInboundSlots(){
+  const { from, to } = monthRange(selectedMonth);
+  const counts = {};
+  COUNTRIES.forEach(c => counts[c.code] = 0);
+  hotels.forEach(h => {
+    const t = new Date(h.submittedAt);
+    if(t >= from && t <= to){
+      if(counts[h.country] !== undefined) counts[h.country] += 1;
+      else counts[h.country] = (counts[h.country]||0) + 1;
+    }
+  });
+  document.getElementById('slot-grid').innerHTML = COUNTRIES.map(c => {
+    const used = counts[c.code] || 0;
+    const pct  = Math.min(100, Math.round(used / MARKET_CAP * 100));
+    let cls = '';
+    if(pct >= 90) cls = 'danger';
+    else if(pct >= 70) cls = 'warn';
+    let pctNote = '';
+    if(pct >= 90) pctNote = `<span class="slot-danger">⚠ Approaching cap</span>`;
+    else if(pct >= 70) pctNote = `<span class="slot-warn">High usage</span>`;
+    else pctNote = `<span style="color:var(--txt2)">Healthy</span>`;
+    return `
+      <div class="slot-card">
+        <div class="slot-card-head">
+          <div><strong style="color:var(--navy);font-size:13px">${escapeHtml(c.code)}</strong></div>
+          <div class="slot-card-fraction">${used}<span class="slot-cap"> / ${MARKET_CAP}</span></div>
+        </div>
+        <div class="slot-bar"><div class="slot-bar-fill ${cls}" style="width:${pct}%"></div></div>
+        <div class="slot-card-pct">
+          <span>${pct}% used</span>
+          ${pctNote}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Sidebar count badges
+// ══════════════════════════════════════════════════════════════
+function updateSidebarCounts(){
+  const unread = hotels.filter(h => !readSet.has(h.id)).length;
+  const elU = document.getElementById('sb-unread-count');
+  elU.textContent = unread;
+  elU.classList.toggle('hidden', unread === 0);
+  document.getElementById('sb-all-count').textContent = hotels.length;
+}
+
+// ══════════════════════════════════════════════════════════════
+// ALL HOTELS table
+// ══════════════════════════════════════════════════════════════
+function buildAhTableHead(){
+  const tr = document.getElementById('ah-thead-row');
+  tr.innerHTML = COLUMNS.map(c => {
+    if(!c.sortable) return `<th>${escapeHtml(c.label)}</th>`;
+    return `<th class="sortable" data-sort="${c.key}" onclick="setSort('${c.key}')">${escapeHtml(c.label)}<span class="sort-ico" id="si-${c.key}">⇅</span></th>`;
+  }).join('');
+}
+function setSort(key){
+  if(sortKey === key) sortAsc = !sortAsc;
+  else { sortKey = key; sortAsc = true; }
+  renderAllHotels();
+}
+function getSortValue(h, key){
+  if(key === 'name')        return (h.hidCn||h.hidEn||'').toLowerCase();
+  if(key === 'bl')          return parseFloat(h.bl) || 0;
+  if(key === 'eligibility') return `${h.eligibilityType||''} ${(parseFloat(h.eligibilityPct)||0).toString().padStart(5,'0')}`;
+  if(key === 'tier')        return `${h.country||''}_${h.tier||''}`; // group by country naturally
+  if(key === 'independent') return h.independent || '';
+  if(key === 'submittedAt' || key === 'scheduledDate') return h[key] ? new Date(h[key]).getTime() : 0;
+  return (h[key] || '').toString().toLowerCase();
+}
+
+function rebuildTierFilter(){
+  const country = document.getElementById('ah-country').value;
+  const sel = document.getElementById('ah-tier');
+  const prev = sel.value;
+  let tiers;
+  if(country && TIERS_BY_COUNTRY[country]) tiers = TIERS_BY_COUNTRY[country];
+  else tiers = [...new Set(Object.values(TIERS_BY_COUNTRY).flat())]; // union when "All countries"
+  sel.innerHTML = `<option value="">All tiers</option>` + tiers.map(t =>
+    `<option value="${t}" ${t===prev?'selected':''}>${tierLabel(t)}</option>`).join('');
+}
+function onCountryFilterChange(){
+  rebuildTierFilter();
+  renderAllHotels();
+}
+
+function renderAllHotels(){
+  const country = document.getElementById('ah-country').value;
+  const status  = document.getElementById('ah-status').value;
+  const tier    = document.getElementById('ah-tier').value;
+  const indep   = document.getElementById('ah-indep')?.value || '';
+  const elig    = document.getElementById('ah-elig')?.value || '';
+  const search  = document.getElementById('ah-search').value.toLowerCase().trim();
+
+  let filtered = hotels.filter(h => {
+    if(country && h.country !== country) return false;
+    if(status && h.status !== status) return false;
+    if(tier && h.tier !== tier) return false;
+    if(indep && h.independent !== indep) return false;
+    if(elig && h.eligibilityType !== elig) return false;
+    if(search){
+      const blob = `${h.hid} ${h.hidCn} ${h.hidEn} ${h.mmEmail}`.toLowerCase();
+      if(!blob.includes(search)) return false;
+    }
+    return true;
+  });
+  filtered.sort((a,b) => {
+    const va = getSortValue(a, sortKey);
+    const vb = getSortValue(b, sortKey);
+    if(va < vb) return sortAsc ? -1 : 1;
+    if(va > vb) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  // Update sort icons
+  COLUMNS.forEach(c => {
+    if(!c.sortable) return;
+    const icoEl = document.getElementById(`si-${c.key}`);
+    const thEl  = document.querySelector(`#ah-thead-row th[data-sort="${c.key}"]`);
+    if(!icoEl || !thEl) return;
+    if(sortKey === c.key){
+      thEl.classList.add('active');
+      icoEl.textContent = sortAsc ? '↑' : '↓';
+    } else {
+      thEl.classList.remove('active');
+      icoEl.textContent = '⇅';
+    }
+  });
+
+  document.getElementById('ah-count').textContent = `${filtered.length} hotel${filtered.length===1?'':'s'}`;
+  const tbody = document.getElementById('ah-tbody');
+  const empty = document.getElementById('ah-empty');
+  if(filtered.length === 0){
+    tbody.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  tbody.innerHTML = filtered.map(h => renderHotelRow(h)).join('');
+}
+
+function renderHotelRow(h){
+  const lockedBody = document.body.classList.contains('locked');
+  const statusOpts = ['received','pending','failed','confirmed'].map(s =>
+    `<option value="${s}" ${h.status===s?'selected':''}>${STATUS_LABEL[s]}</option>`).join('');
+  const lastPc = (h.precheckHistory || []).slice(-1)[0];
+  const pcBadge = lastPc
+    ? `<div style="font-size:10px;margin-top:3px"><span style="color:${lastPc.result==='pass'?'#065F46':'#991B1B'};font-weight:700">pvar: ${lastPc.result==='pass'?'✓ pass':'✗ fail'}${lastPc.uplift?` ${lastPc.uplift}`:''}</span></div>`
+    : '';
+
+  // Tier label (country-aware) + inbound markets (auto-derived from tier rules, fall back to stored array)
+  const rule = tierRule(h.country, h.tier);
+  const inbound = (h.inboundMarkets && h.inboundMarkets.length) ? h.inboundMarkets : (rule ? rule.inbound : []);
+  const inboundChips = inbound.length
+    ? `<div class="ah-inbound" title="Inbound source markets exposed by this tier">${inbound.map(m => `<span class="ah-inbound-chip">${escapeHtml(m)}</span>`).join('')}</div>`
+    : '';
+  const tierTxt = h.tier
+    ? `<div class="ah-tier-stack"><span class="ah-tier-label">${tierLabel(h.tier)}</span>${inboundChips}</div>`
+    : '<span style="color:var(--txt2)">—</span>';
+
+  // Eligibility cell — Discount or INM with %
+  const eligTxt = h.eligibilityType
+    ? `<span class="elig-pill ${h.eligibilityType}">${h.eligibilityType==='discount'?'💰 Discount':'🎁 INM'}</span> <strong style="color:var(--navy);font-variant-numeric:tabular-nums">${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%</strong>`
+    : '<span style="color:var(--txt2)">—</span>';
+
+  // Independent: show Y or N (single letter, color-coded)
+  const indepTxt = h.independent === 'y'
+    ? `<span class="indep-pill y" title="Social-only sign-up">Y</span>`
+    : h.independent === 'n'
+      ? `<span class="indep-pill n" title="Bundle sale enabled${h.independentNote?` — ${h.independentNote}`:''}">N</span>`
+      : '<span style="color:var(--txt2)">—</span>';
+
+  const expanded = expandedPrecheckId === h.id;
+  const mainRow = `
+    <tr id="row-${h.id}">
+      <td class="ah-hid">${escapeHtml(h.hid)}</td>
+      <td class="ah-name">
+        <span class="ah-name-cn">${escapeHtml(h.hidCn||'—')}</span>
+        <span class="ah-name-en">${escapeHtml(h.hidEn||'')}</span>
+      </td>
+      <td><span class="country-cell">${escapeHtml(h.country||'—')}</span></td>
+      <td>${tierTxt}</td>
+      <td>${indepTxt}</td>
+      <td>${eligTxt}</td>
+      <td class="ah-bl">${(parseFloat(h.bl)||0).toFixed(1)}%</td>
+      <td class="ah-link">${h.propertyUrl ? `<a href="${escapeHtml(h.propertyUrl)}" target="_blank" rel="noopener">🔗 Open</a>` : '<span class="ah-no-link">—</span>'}</td>
+      <td class="ah-link">
+        ${lockedBody
+          ? (h.assetUrl ? `<a href="${escapeHtml(h.assetUrl)}" target="_blank" rel="noopener">📦 Download</a>` : '<span class="ah-no-link">—</span>')
+          : `<input class="cell-input" type="url" value="${escapeHtml(h.assetUrl||'')}" placeholder="https://…" onchange="updateField('${h.id}','assetUrl',this.value)">`
+        }
+      </td>
+      <td class="ah-link">
+        ${lockedBody
+          ? (h.videoUrl ? `<a href="${escapeHtml(h.videoUrl)}" target="_blank" rel="noopener">🎥 Open</a>` : '<span class="ah-no-link" title="No video — will not be published on TikTok">—</span>')
+          : `<input class="cell-input" type="url" value="${escapeHtml(h.videoUrl||'')}" placeholder="https://… (optional)" onchange="updateField('${h.id}','videoUrl',this.value)">`
+        }
+      </td>
+      <td>${escapeHtml(h.mmEmail||'—')}</td>
+      <td>
+        ${lockedBody
+          ? `<span class="cell-readonly">${escapeHtml(h.scheduledDate||'—')}</span>`
+          : `<input class="cell-input" type="date" value="${escapeHtml(h.scheduledDate||'')}" onchange="updateField('${h.id}','scheduledDate',this.value)">`
+        }
+      </td>
+      <td>
+        ${lockedBody
+          ? `<span class="status-pill status-${h.status||'received'}">${STATUS_LABEL[h.status]||STATUS_LABEL.received}</span>${pcBadge}`
+          : `<select class="cell-input" onchange="updateStatus('${h.id}',this.value)">${statusOpts}</select>${pcBadge}`
+        }
+      </td>
+      <td style="font-size:11px;color:var(--txt2);white-space:nowrap">${fmtDate(h.submittedAt)}</td>
+      <td>
+        <div class="ah-actions">
+          <button class="ah-action-precheck" onclick="togglePrecheck('${h.id}')" title="Open the D-3 Pricing Review (pvar) panel">
+            💰 ${expanded?'Close':'Pre-check'}
+          </button>
+          <button class="ah-action-notify" onclick="notifyMmStatus('${h.id}')" title="Copy a status update email to MM (e.g. confirmed & ready to publish)">
+            📋 Notify MM
+          </button>
+          ${h.status==='failed' ? `<button class="ah-action-notify-fail" onclick="notifyMmFailed('${h.id}')" title="Copy a Pre-check failed notification to MM">⚠ Notify Failed</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `;
+  const precheckRow = expanded ? renderPrecheckPanel(h) : '';
+  return mainRow + precheckRow;
+}
+
+function updateField(id, key, val){
+  if(document.body.classList.contains('locked')){
+    toast('Switch to Editor mode to make changes.', '🔒');
+    return;
+  }
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  h[key] = val;
+  saveHotels();
+  toast(`Updated · ${key}`, '💾');
+}
+function updateStatus(id, val){
+  if(document.body.classList.contains('locked')){
+    toast('Switch to Editor mode to make changes.', '🔒');
+    renderAllHotels();
+    return;
+  }
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  h.status = val;
+  h.statusHistory = h.statusHistory || [];
+  h.statusHistory.push({ when:new Date().toISOString(), s:val });
+  saveHotels();
+  renderAllHotels();
+  toast(`Status updated → ${STATUS_LABEL[val]}`, '🔄');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Pre-check panel (mirrors the KOL pvar flow)
+// ══════════════════════════════════════════════════════════════
+function togglePrecheck(id){
+  expandedPrecheckId = (expandedPrecheckId === id) ? null : id;
+  renderAllHotels();
+}
+function renderPrecheckPanel(h){
+  const lockedBody = document.body.classList.contains('locked');
+  const last = (h.precheckHistory||[]).slice(-1)[0] || {};
+
+  // Schema (new):
+  //   pp1Pre / pp1Dur  → "Pre vs. Pre"   (baseline period 1 vs baseline period 2)
+  //   pp2Pre / pp2Dur  → "Pre vs. Post"  (baseline vs after publish)
+  //   notes, screenshot, result
+  // Reads from draft (current edit session) → fall back to last saved entry → empty.
+  const draft = h._draftPc || {};
+  const v = (k) => draft[k] !== undefined ? draft[k] : (last[k] ?? '');
+  const pp1Pre = v('pp1Pre'), pp1Dur = v('pp1Dur');
+  const pp2Pre = v('pp2Pre'), pp2Dur = v('pp2Dur');
+  const screenshot = v('screenshot');
+  const notes = v('notes');
+  const radioResult = draft.result !== undefined ? draft.result : (last.result || '');
+
+  // Default pre-check window (every Friday looks at last Tue-Thu)
+  const today = new Date();
+  const dow = today.getDay(); // 0=Sun, 5=Fri
+  // Most recent Friday (0 if today is Fri)
+  const offsetToFri = (dow - 5 + 7) % 7;
+  const lastFri = new Date(today.getTime() - offsetToFri*86400000);
+  // L3D = the Tue-Thu *before* that Friday → Friday-3 (Tue) … Friday-1 (Thu)
+  const defStart = new Date(lastFri.getTime() - 3*86400000);
+  const defEnd   = new Date(lastFri.getTime() - 1*86400000);
+  const isoDate = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  const startDate = v('startDate') || isoDate(defStart);
+  const endDate   = v('endDate')   || isoDate(defEnd);
+
+  const calcDelta = (pre, dur) => {
+    const a = parseFloat(pre), b = parseFloat(dur);
+    if(!isFinite(a) || !isFinite(b) || a === 0) return { txt:'—', cls:'unknown' };
+    const d = ((b-a)/a)*100;
+    return { txt:(d>=0?'+':'') + d.toFixed(1)+'%', cls: d>=0?'pass':'fail' };
+  };
+  const d1 = calcDelta(pp1Pre, pp1Dur);
+  const d2 = calcDelta(pp2Pre, pp2Dur);
+  // Verdict: if EITHER is negative → fail; else if both have data and >= 0 → pass; else unknown
+  let autoVerdict = 'unknown';
+  if(d1.cls === 'fail' || d2.cls === 'fail') autoVerdict = 'fail';
+  else if(d1.cls === 'pass' && d2.cls === 'pass') autoVerdict = 'pass';
+
+  // Status banner (mirrors the KOL screenshot style)
+  let statusLabel, statusIcon, statusBg, statusFg;
+  if(last.result === 'pass'){ statusLabel = 'Pre-check passed'; statusIcon = '✅'; statusBg = '#D1FAE5'; statusFg = '#065F46'; }
+  else if(last.result === 'fail'){ statusLabel = 'Pre-check failed — pricing adjustment needed'; statusIcon = '🔴'; statusBg = '#FEE2E2'; statusFg = '#991B1B'; }
+  else if(h.scheduledDate){
+    const sd = new Date(h.scheduledDate);
+    sd.setDate(sd.getDate() - 3);
+    statusLabel = `Pre-check scheduled for ${isoDate(sd)}`;
+    statusIcon = '⏳'; statusBg = '#FEF3C7'; statusFg = '#92400E';
+  } else {
+    statusLabel = 'No exposure date set yet';
+    statusIcon = '🟡'; statusBg = '#FEF3C7'; statusFg = '#92400E';
+  }
+
+  // History table
+  const history = h.precheckHistory || [];
+  const histHtml = history.length === 0
+    ? `<div style="font-size:11px;color:var(--txt2);font-style:italic">No previous pre-check attempts yet.</div>`
+    : history.slice().reverse().map((p,i) => `
+        <div class="pc-history-item">
+          <span class="pc-h-when">#${history.length-i} · ${fmtDateTime(p.when)}</span>
+          ${p.startDate ? `<span style="font-size:10.5px;color:var(--txt2)">${escapeHtml(p.startDate)}→${escapeHtml(p.endDate||'')}</span>` : ''}
+          <span class="pc-h-num">Δ1 ${p.delta1||'—'} · Δ2 ${p.delta2||'—'}</span>
+          <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px;${p.result==='pass'?'background:#D1FAE5;color:#065F46;border:1px solid #86EFAC':'background:#FEE2E2;color:#991B1B;border:1px solid #FECACA'}">${p.result}</span>
+          ${p.screenshot ? `<a href="${escapeHtml(p.screenshot)}" target="_blank" rel="noopener">📸 Screenshot</a>` : ''}
+          ${p.notes ? `<span style="font-size:10.5px;color:var(--txt2)">— ${escapeHtml(p.notes)}</span>` : ''}
+        </div>`).join('');
+
+  const ro = lockedBody ? 'readonly disabled' : '';
+
+  return `
+    <tr class="precheck-row">
+      <td colspan="${COLUMNS.length}">
+        <div class="precheck-panel">
+          <div class="precheck-panel-title">💰 D-3 Pricing Review (PVAR) — ${escapeHtml(h.hidCn || h.hidEn)} <span style="margin-left:auto;font-size:10px;color:var(--txt2);font-weight:500;text-transform:none;letter-spacing:0">HID ${escapeHtml(h.hid)}</span></div>
+
+          <div class="precheck-panel-help">
+            Run the pvar SQL query for this HID. <strong>D-3 Pricing Review</strong> — every <strong>Friday</strong>, check the <strong>Last 3 Days (Tue–Thu)</strong>. Fill in the two pvar comparisons (Pre vs Pre, Pre vs Post), paste the screenshot share-link, then mark <strong>Pass</strong> or <strong>Fail</strong> and save.<br>
+            <strong style="color:#065F46">Pass</strong> → campaign goes ahead as planned, no need to delay.<br>
+            <strong style="color:#991B1B">Fail</strong> → MM has <strong>2 business days</strong> to get the hotel to adjust pricing; a re-check is scheduled 8 days after the adjustment period.
+          </div>
+
+          <!-- Status + checkout row -->
+          <div class="pc-status-row" style="background:${statusBg};color:${statusFg}">
+            <div class="pc-status-cell pc-status-main">
+              <div class="pc-status-label">STATUS</div>
+              <div class="pc-status-value">${statusIcon} ${escapeHtml(statusLabel)}</div>
+            </div>
+            ${h.scheduledDate ? `
+              <div class="pc-status-cell" style="text-align:right">
+                <div class="pc-status-label">Scheduled exposure</div>
+                <div class="pc-status-value" style="font-variant-numeric:tabular-nums">${escapeHtml(h.scheduledDate)}</div>
+              </div>` : ''}
+          </div>
+
+          <!-- HID + window dates row -->
+          <div class="pc-meta-row">
+            <div class="pc-meta-cell">
+              <div class="pc-meta-label">HID</div>
+              <div class="pc-meta-value pc-mono">${escapeHtml(h.hid)}</div>
+            </div>
+            <div class="pc-meta-cell">
+              <div class="pc-meta-label">Pre-check Start (D-3 / Tue)</div>
+              <input type="date" class="pc-date-input" value="${escapeHtml(startDate)}" ${ro} oninput="updatePvar('${h.id}','startDate',this.value)">
+            </div>
+            <div class="pc-meta-cell">
+              <div class="pc-meta-label">Pre-check End (D-1 / Thu)</div>
+              <input type="date" class="pc-date-input" value="${escapeHtml(endDate)}" ${ro} oninput="updatePvar('${h.id}','endDate',this.value)">
+            </div>
+          </div>
+
+          <!-- Two side-by-side pvar comparisons -->
+          <div class="pvar-grid">
+            <div class="pvar-card">
+              <div class="pvar-card-title">📈 Pre vs. Pre <span style="font-weight:500;color:var(--txt2);text-transform:none;letter-spacing:0">— baseline drift check</span></div>
+              <table class="pvar-table">
+                <thead><tr><th>PRE</th><th>DURING</th><th class="pvar-th-delta">+/−</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><input type="number" step="0.01" value="${escapeHtml(pp1Pre)}" ${ro} placeholder="0.00" oninput="updatePvar('${h.id}','pp1Pre',this.value);renderAllHotels()"></td>
+                    <td><input type="number" step="0.01" value="${escapeHtml(pp1Dur)}" ${ro} placeholder="0.00" oninput="updatePvar('${h.id}','pp1Dur',this.value);renderAllHotels()"></td>
+                    <td class="pvar-delta-cell"><span class="pvar-delta ${d1.cls}">${d1.txt}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pvar-card">
+              <div class="pvar-card-title">📊 Pre vs. Post <span style="font-weight:500;color:var(--txt2);text-transform:none;letter-spacing:0">— campaign uplift check</span></div>
+              <table class="pvar-table">
+                <thead><tr><th>PRE</th><th>DURING</th><th class="pvar-th-delta">+/−</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><input type="number" step="0.01" value="${escapeHtml(pp2Pre)}" ${ro} placeholder="0.00" oninput="updatePvar('${h.id}','pp2Pre',this.value);renderAllHotels()"></td>
+                    <td><input type="number" step="0.01" value="${escapeHtml(pp2Dur)}" ${ro} placeholder="0.00" oninput="updatePvar('${h.id}','pp2Dur',this.value);renderAllHotels()"></td>
+                    <td class="pvar-delta-cell"><span class="pvar-delta ${d2.cls}">${d2.txt}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Screenshot share link -->
+          <div class="pc-attach-block">
+            <div class="pc-attach-ico">🔗</div>
+            <div class="pc-attach-body">
+              <div class="pc-attach-label">Screenshot Share-Link <span style="color:var(--txt2);font-weight:500;text-transform:none;letter-spacing:0">— paste a Google Drive / Dropbox / SharePoint link to the SQL screenshot</span></div>
+              <div class="pc-attach-input-wrap">
+                <input type="url" value="${escapeHtml(screenshot)}" ${ro} placeholder="https://drive.google.com/…  or  https://agoda.sharepoint.com/…" oninput="updatePvar('${h.id}','screenshot',this.value);renderAllHotels()">
+                ${screenshot ? `<a class="pc-attach-open" href="${escapeHtml(screenshot)}" target="_blank" rel="noopener">📎 Open</a>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="pc-notes-block">
+            <div class="pc-notes-label">📝 Notes</div>
+            <input type="text" class="pc-notes-input" value="${escapeHtml(notes)}" ${ro} placeholder="e.g. weekend spike, isolated to 2 dates" oninput="updatePvar('${h.id}','notes',this.value)">
+          </div>
+
+          <!-- Result radios -->
+          <div class="pc-result-block">
+            <div class="pc-notes-label">RESULT</div>
+            <label class="pc-radio ${radioResult==='pass'?'sel-pass':''}">
+              <input type="radio" name="pc-result-${h.id}" value="pass" ${radioResult==='pass'?'checked':''} ${ro} onchange="updatePvar('${h.id}','result','pass')">
+              <span>✅ Pass — continue as planned</span>
+            </label>
+            <label class="pc-radio ${radioResult==='fail'?'sel-fail':''}">
+              <input type="radio" name="pc-result-${h.id}" value="fail" ${radioResult==='fail'?'checked':''} ${ro} onchange="updatePvar('${h.id}','result','fail')">
+              <span>🔴 Fail — MM must request pricing adjustment</span>
+            </label>
+            ${autoVerdict !== 'unknown' && !radioResult ? `<span style="margin-left:auto;font-size:10.5px;color:var(--txt2);font-style:italic">Auto-suggest: <strong style="color:${autoVerdict==='pass'?'#065F46':'#991B1B'}">${autoVerdict.toUpperCase()}</strong></span>` : ''}
+          </div>
+
+          <div class="precheck-actions">
+            <button class="btn editor-only" style="background:#92400E;color:#fff;border-color:#92400E" onclick="savePrecheckResult('${h.id}')">💾 Save pre-check result</button>
+            <button class="btn editor-only" style="background:#78350F;color:#fff;border-color:#78350F" onclick="copyMmPrecheckEmail('${h.id}')">📋 Copy MM "pre-check result" email</button>
+            <button class="btn btn-ghost" onclick="togglePrecheck('${h.id}')">Close</button>
+            <span class="read-only-only" style="font-size:11px;color:var(--txt2);background:#FFFBEB;border:1px solid #FDE68A;padding:5px 10px;border-radius:6px">🔒 Switch to Editor mode to record the result.</span>
+          </div>
+
+          <div class="pc-history">
+            <div class="pc-history-title">📅 Pre-check History (${history.length})</div>
+            ${histHtml}
+          </div>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function updatePvar(id, key, val){
+  if(document.body.classList.contains('locked')) return;
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  h._draftPc = h._draftPc || {};
+  h._draftPc[key] = val;
+}
+
+function savePrecheckResult(id){
+  if(document.body.classList.contains('locked')){
+    toast('Switch to Editor mode to save.', '🔒');
+    return;
+  }
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  const draft = h._draftPc || {};
+  const last  = (h.precheckHistory||[]).slice(-1)[0] || {};
+  const pick = (k) => draft[k] !== undefined ? draft[k] : (last[k] ?? '');
+
+  const result = draft.result !== undefined ? draft.result : last.result;
+  if(!result){
+    toast('Please select Pass or Fail before saving.', '⚠️');
+    return;
+  }
+  const calcDelta = (pre, dur) => {
+    const a = parseFloat(pre), b = parseFloat(dur);
+    if(!isFinite(a) || !isFinite(b) || a === 0) return '—';
+    const d = ((b-a)/a)*100;
+    return (d>=0?'+':'') + d.toFixed(1) + '%';
+  };
+  const entry = {
+    when:      new Date().toISOString(),
+    result,
+    startDate: pick('startDate'),
+    endDate:   pick('endDate'),
+    pp1Pre: parseFloat(pick('pp1Pre')) || 0,
+    pp1Dur: parseFloat(pick('pp1Dur')) || 0,
+    pp2Pre: parseFloat(pick('pp2Pre')) || 0,
+    pp2Dur: parseFloat(pick('pp2Dur')) || 0,
+    delta1: calcDelta(pick('pp1Pre'), pick('pp1Dur')),
+    delta2: calcDelta(pick('pp2Pre'), pick('pp2Dur')),
+    screenshot: pick('screenshot') || '',
+    notes:      pick('notes') || '',
+  };
+  h.precheckHistory = h.precheckHistory || [];
+  h.precheckHistory.push(entry);
+  // Cascade status
+  h.status = (result === 'pass') ? 'confirmed' : 'failed';
+  h.statusHistory = h.statusHistory || [];
+  h.statusHistory.push({ when:entry.when, s:h.status, by:'precheck' });
+  h._draftPc = null;
+  saveHotels();
+  renderAllHotels();
+  toast(result==='pass'
+    ? '✅ Pre-check saved as PASS — status set to Confirmed.'
+    : '🔴 Pre-check saved as FAIL — status set to Pre-check Failed.');
+}
+
+function copyMmPrecheckEmail(id){
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  const last = (h.precheckHistory||[]).slice(-1)[0];
+  if(!last){
+    toast('Please save a pre-check result first, then copy the email.', '⚠️');
+    return;
+  }
+  const to = h.mmEmail || `[${h.country} Market Manager — please fill in MM email]`;
+  const passBody =
+`To: ${to}
+Subject: ✅ ${h.hidEn||h.hidCn} (HID ${h.hid}) — D-3 Pricing Review PASSED
+
+Hi,
+
+The D-3 pricing pre-check for the hotel below has PASSED. Campaign can go ahead as planned — no need to delay the scheduled exposure.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏨 HOTEL
+  Name (CN/EN): ${h.hidCn} / ${h.hidEn}
+  HID:          ${h.hid}
+  Country:      ${countryName(h.country)}
+  BL%:          ${(parseFloat(h.bl)||0).toFixed(1)}%
+  Tier:         ${tierLabel(h.tier)}
+  Independent:  ${h.independent==='y'?'Y (social-only)':'N (bundle sale)'}
+  Eligibility:  ${h.eligibilityType?`${h.eligibilityType==='discount'?'Discount':'INM'} ${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%`:'—'}
+  Period:       ${h.commitmentStart && h.commitmentEnd ? `${h.commitmentStart} → ${h.commitmentEnd}  (${commitmentDays(h.commitmentStart,h.commitmentEnd)} days)` : '—'}
+  Inbound:      ${(h.inboundMarkets||[]).join(', ') || '—'}
+  Property URL: ${h.propertyUrl||'—'}
+  Asset URL:    ${h.assetUrl||'—'}
+  Video URL:    ${h.videoUrl||'(none — will not publish to TikTok)'}
+
+📅 SCHEDULE
+  Scheduled Exposure Date: ${h.scheduledDate || '(not set)'}
+  Status:       ${STATUS_LABEL[h.status] || STATUS_LABEL.received}
+
+✅ PRE-CHECK RESULT (PASS)
+  Window:        ${last.startDate} → ${last.endDate}
+  Pre vs. Pre:   ${last.delta1}  (pre ${last.pp1Pre} → during ${last.pp1Dur})
+  Pre vs. Post:  ${last.delta2}  (pre ${last.pp2Pre} → during ${last.pp2Dur})
+  Screenshot:    ${last.screenshot || '(none)'}
+  Notes:         ${last.notes || '(none)'}
+  Recorded:      ${fmtDateTime(last.when)}
+
+⚠ ACTION REQUIRED — please reply with a screenshot of the ${h.eligibilityType==='inm'?'INM':'Discount'} setting
+  Before the campaign goes live, please confirm the agreed commitment is actually configured in the system.
+  Reply to this email with a screenshot of the ${h.eligibilityType==='inm'?'INM':'Discount'} configuration page showing:
+    • HID ${h.hid}
+    • ${h.eligibilityType==='inm'?'INM':'Discount'} ${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%
+    • Active during ${h.commitmentStart||'—'} → ${h.commitmentEnd||'—'}
+  Without the screenshot the publish step will be put on hold.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best,
+SAVI — Social Total Solution Program
+`;
+  const failBody =
+`To: ${to}
+Subject: 🔴 ${h.hidEn||h.hidCn} (HID ${h.hid}) — D-3 Pricing Review FAILED, action required
+
+Hi,
+
+The D-3 pricing pre-check for the hotel below has FAILED. Per the program SLA, MM has **2 business days** to coordinate with the hotel on a pricing adjustment. A re-check is then scheduled 8 days after the adjustment period.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏨 HOTEL
+  Name (CN/EN): ${h.hidCn} / ${h.hidEn}
+  HID:          ${h.hid}
+  Country:      ${countryName(h.country)}
+  BL%:          ${(parseFloat(h.bl)||0).toFixed(1)}%
+  Tier:         ${tierLabel(h.tier)}
+  Independent:  ${h.independent==='y'?'Y (social-only)':'N (bundle sale)'}
+  Eligibility:  ${h.eligibilityType?`${h.eligibilityType==='discount'?'Discount':'INM'} ${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%`:'—'}
+  Property URL: ${h.propertyUrl||'—'}
+
+🔴 PRE-CHECK RESULT (FAIL)
+  Window:        ${last.startDate} → ${last.endDate}
+  Pre vs. Pre:   ${last.delta1}  (pre ${last.pp1Pre} → during ${last.pp1Dur})
+  Pre vs. Post:  ${last.delta2}  (pre ${last.pp2Pre} → during ${last.pp2Dur})
+  Screenshot:    ${last.screenshot || '(none)'}
+  Notes:         ${last.notes || '(none)'}
+  Recorded:      ${fmtDateTime(last.when)}
+
+ACTION REQUIRED:
+  • Engage the hotel within 2 business days to discuss pricing adjustment.
+  • Once adjustment is in place, ping admin so we can schedule the re-check.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best,
+SAVI — Social Total Solution Program
+`;
+  const text = last.result === 'pass' ? passBody : failBody;
+  navigator.clipboard.writeText(text)
+    .then(() => toast(`MM pre-check email copied (${last.result.toUpperCase()}) — To: ${to}`, '📋'))
+    .catch(() => alert(text));
+}
+
+// ══════════════════════════════════════════════════════════════
+// Notify MM emails (status update + failure)
+// ══════════════════════════════════════════════════════════════
+function notifyMmStatus(id){
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  const to = h.mmEmail || `[${h.country} Market Manager — please fill in MM email]`;
+  const ready = h.status === 'confirmed';
+  const subj = ready
+    ? `✅ ${h.hidEn||h.hidCn} — Pre-check passed, ready to publish`
+    : `🔄 ${h.hidEn||h.hidCn} — Status update`;
+  const body =
+`To: ${to}
+Subject: ${subj}
+
+Hi,
+
+The hotel signup status has been updated. Latest details below:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏨 HOTEL
+  Name (CN/EN): ${h.hidCn} / ${h.hidEn}
+  HID:          ${h.hid}
+  Country:      ${countryName(h.country)}
+  BL%:          ${(parseFloat(h.bl)||0).toFixed(1)}%
+  Tier:         ${tierLabel(h.tier)}
+  Independent:  ${h.independent==='y'?'Y (social-only sign-up)':h.independent==='n'?'N (bundle sale)':'—'}
+  Eligibility:  ${h.eligibilityType?`${h.eligibilityType==='discount'?'Discount':'INM'} ${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%`:'—'}
+  Period:       ${h.commitmentStart && h.commitmentEnd ? `${h.commitmentStart} → ${h.commitmentEnd}  (${commitmentDays(h.commitmentStart,h.commitmentEnd)} days)` : '—'}
+  Inbound:      ${(h.inboundMarkets||[]).join(', ') || '—'}
+  Property URL: ${h.propertyUrl||'—'}
+  Asset URL:    ${h.assetUrl||'—'}
+  Video URL:    ${h.videoUrl||'(none — will not publish to TikTok)'}
+
+📅 SCHEDULE
+  Scheduled Exposure Date: ${h.scheduledDate || '(not set yet)'}
+  Status:       ${STATUS_LABEL[h.status] || STATUS_LABEL.received}
+${ready ? `\n✅ Pre-check passed — please coordinate the publish flow on the scheduled date above.` : `\nPlease keep an eye on this hotel; the status will be updated once pre-check completes.`}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best,
+SAVI — Social Total Solution Program
+`;
+  navigator.clipboard.writeText(body).then(() => toast(`Status email copied — To: ${to}`, '📋')).catch(() => alert(body));
+}
+
+function notifyMmFailed(id){
+  const h = hotels.find(x=>x.id===id);
+  if(!h) return;
+  const to = h.mmEmail || `[${h.country} Market Manager — please fill in MM email]`;
+  const last = (h.precheckHistory||[]).slice(-1)[0] || {};
+  const body =
+`To: ${to}
+Subject: ⚠ ${h.hidEn||h.hidCn} — Pre-check FAILED, adjustment needed
+
+Hi,
+
+Unfortunately the post-exposure price pre-check for the hotel below did NOT pass. Please review with the hotel and decide whether to:
+  • adjust pricing / brief and re-submit, OR
+  • withdraw from this campaign cycle.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏨 HOTEL
+  Name (CN/EN): ${h.hidCn} / ${h.hidEn}
+  HID:          ${h.hid}
+  Country:      ${countryName(h.country)}
+  BL%:          ${(parseFloat(h.bl)||0).toFixed(1)}%
+  Tier:         ${tierLabel(h.tier)}
+  Eligibility:  ${h.eligibilityType?`${h.eligibilityType==='discount'?'Discount':'INM'} ${(parseFloat(h.eligibilityPct)||0).toFixed(1)}%`:'—'}
+  Period:       ${h.commitmentStart && h.commitmentEnd ? `${h.commitmentStart} → ${h.commitmentEnd}  (${commitmentDays(h.commitmentStart,h.commitmentEnd)} days)` : '—'}
+  Inbound:      ${(h.inboundMarkets||[]).join(', ') || '—'}
+  Property URL: ${h.propertyUrl||'—'}
+
+🔴 PRE-CHECK RESULT
+  Verdict:        FAIL
+  Window:         ${last.startDate||'—'} → ${last.endDate||'—'}
+  Pre vs. Pre:    ${last.delta1||'—'}  (pre ${last.pp1Pre||'—'} → during ${last.pp1Dur||'—'})
+  Pre vs. Post:   ${last.delta2||'—'}  (pre ${last.pp2Pre||'—'} → during ${last.pp2Dur||'—'})
+  Screenshot:     ${last.screenshot || '(none)'}
+  Notes:          ${last.notes || '(none)'}
+  Checked at:     ${fmtDateTime(last.when)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Please confirm next steps and reply to this email.
+
+Best,
+SAVI — Social Total Solution Program
+`;
+  navigator.clipboard.writeText(body).then(() => toast(`Failure notification copied — To: ${to}`, '📋')).catch(() => alert(body));
+}
+
+// ══════════════════════════════════════════════════════════════
+// CSV export
+// ══════════════════════════════════════════════════════════════
+function exportHotelsCSV(){
+  const headers = ['HID','Hotel CN','Hotel EN','Country','Tier','Independent','Independent Note','Eligibility Type','Eligibility %','Commitment Start','Commitment End','Commitment Days','Inbound Markets','BL%','Property URL','Asset URL','Video URL','MM Email','Scheduled Date','Status','Note','Submitted At'];
+  const rows = hotels.map(h => [
+    h.hid, h.hidCn, h.hidEn, h.country, tierLabel(h.tier).replace(/^\S+ /,''), h.independent||'', h.independentNote||'',
+    h.eligibilityType||'', h.eligibilityPct||'',
+    h.commitmentStart||'', h.commitmentEnd||'', commitmentDays(h.commitmentStart, h.commitmentEnd) || '',
+    (h.inboundMarkets||[]).join('|'),
+    h.bl, h.propertyUrl, h.assetUrl||'', h.videoUrl||'', h.mmEmail, h.scheduledDate||'', h.status, h.note||'', h.submittedAt
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => {
+    const s = String(v ?? '');
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `hotel-signup-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Hotels exported to CSV 📥');
+}
+
+// ══════════════════════════════════════════════════════════════
+// HOTEL SIGNUP form
+// ══════════════════════════════════════════════════════════════
+function onSignupCountryChange(){
+  const country = document.getElementById('su-country').value;
+  const grid = document.getElementById('su-tier-grid');
+  const hint = document.getElementById('su-tier-hint');
+  // Reset tier + commitment selection whenever country changes (vocabulary changes)
+  document.getElementById('su-tier').value = '';
+  document.getElementById('su-elig-type').value = '';
+  document.getElementById('su-elig-pct').value = '';
+  document.getElementById('su-tier-req').style.display = 'none';
+  document.getElementById('su-tier-req').innerHTML = '';
+
+  if(!country){
+    grid.innerHTML = `<div class="tier-empty" style="grid-column:1/-1;padding:18px;text-align:center;color:var(--txt2);font-size:12px;background:var(--bg);border:1px dashed var(--border);border-radius:9px">Tiers will appear here once you choose a country above. Each tier already carries its own commitment %, eligibility criteria and inbound source markets — you don't need to type them in.</div>`;
+    hint.textContent = '— select Country first to see the available tiers';
+  } else {
+    const tiers = TIERS_BY_COUNTRY[country] || [];
+    hint.textContent = `— ${tiers.length} tier${tiers.length===1?'':'s'} available for ${country} · click one to auto-fill the requirements`;
+    grid.innerHTML = tiers.map(t => {
+      const d = TIER_DEF[t];
+      const r = tierRule(country, t);
+      // Prominent commitment line (large), subtle markets line (small)
+      const commitParts = r ? r.commitments.map(c =>
+        `<span>${c.type==='discount'?`💰 ${c.pct}% Disc.`:`🎁 ${c.pct}% INM`}</span>`
+      ) : [];
+      const commitPreview = commitParts.length === 1
+        ? commitParts[0]
+        : commitParts.join('<span class="tp-or">OR</span>');
+      const inboundPreview = r ? r.inbound.slice(0,6).map(m =>
+        `<span class="tp-flag">${escapeHtml(m)}</span>`
+      ).join(' · ') + (r.inbound.length>6 ? ` <span style="color:var(--txt2)">+${r.inbound.length-6}</span>` : '') : '';
+      return `
+        <div class="tier-card" data-tier="${t}" onclick="suSetTier('${t}')">
+          <div class="tier-nm">${d.icon} ${escapeHtml(d.label)}</div>
+          <div class="tier-desc">${escapeHtml(d.desc)}</div>
+          ${r ? `
+            <div class="tier-preview">
+              <div class="tp-commit-line">${commitPreview}</div>
+              <div class="tp-markets">→ ${inboundPreview}</div>
+            </div>` : ''}
+          <div class="tier-chk">✓ Selected</div>
+        </div>`;
+    }).join('');
+  }
+  suValidate();
+}
+
+function suSetTier(t){
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.toggle('sel', c.dataset.tier === t));
+  document.getElementById('su-tier').value = t;
+  // Reset commitment fields then render the auto-filled Tier Requirements panel
+  document.getElementById('su-elig-type').value = '';
+  document.getElementById('su-elig-pct').value = '';
+  renderTierRequirements();
+  suValidate();
+}
+
+function renderTierRequirements(){
+  const country = document.getElementById('su-country').value;
+  const tier    = document.getElementById('su-tier').value;
+  const panel   = document.getElementById('su-tier-req');
+  const r       = tierRule(country, tier);
+  if(!country || !tier || !r){
+    panel.style.display = 'none';
+    panel.innerHTML = '';
+    return;
+  }
+  const def = TIER_DEF[tier];
+
+  // Auto-pick the first commitment option if none is currently selected
+  if(!document.getElementById('su-elig-type').value){
+    const first = r.commitments[0];
+    document.getElementById('su-elig-type').value = first.type;
+    document.getElementById('su-elig-pct').value  = first.pct;
+  }
+  const curType = document.getElementById('su-elig-type').value;
+
+  const commitHtml = (r.commitments.length === 1)
+    ? `<div class="commit-locked">
+         <span class="co-emoji">${r.commitments[0].type==='discount'?'💰':'🎁'}</span>
+         <span>${escapeHtml(commitmentText(r.commitments[0]))} <span style="font-weight:500;color:#065F46;font-size:11px">— fixed for this tier</span></span>
+         <span class="co-pct">${r.commitments[0].pct}%</span>
+       </div>`
+    : `<div class="commit-opts">${
+        r.commitments.map((c,i) => `
+          <label class="commit-opt ${c.type===curType?'sel':''}">
+            <input type="radio" name="su-commit" value="${c.type}" ${c.type===curType?'checked':''} onchange="suSetCommitment('${c.type}')">
+            <span class="co-emoji">${c.type==='discount'?'💰':'🎁'}</span>
+            <span class="co-text">${c.type==='discount'?'Excl Discount':'INM'}</span>
+            <span class="co-pct">${c.pct}%</span>
+          </label>${i < r.commitments.length-1 ? `<div style="text-align:center;color:var(--txt2);font-size:10px;font-weight:700;letter-spacing:1.5px;margin:-2px 0">— OR —</div>` : ''}
+        `).join('')
+      }</div>`;
+
+  const inboundHtml = `<div class="inbound-chips">${
+    r.inbound.map(m => `<span class="inbound-chip">${escapeHtml(m)}</span>`).join('')
+  }</div>`;
+
+  const criteriaHtml = r.criteria
+    ? `<div class="tr-criteria">📋 <strong>${escapeHtml(r.criteria)}</strong></div>`
+    : `<div class="tr-empty">No additional criteria — any property in this tier qualifies.</div>`;
+  const restrictionHtml = r.restriction
+    ? `<div class="tr-restriction">⚠ ${escapeHtml(r.restriction)}</div>`
+    : '';
+
+  // Pull current commitment period values from the form (so the panel re-render preserves them)
+  const startDate = document.getElementById('su-commit-start')?.value || '';
+  const endDate   = document.getElementById('su-commit-end')?.value   || '';
+  const days      = commitmentDays(startDate, endDate);
+  let summaryHtml;
+  if(!startDate || !endDate){
+    summaryHtml = `<div class="period-summary blank">📅 Pick start &amp; end dates</div>`;
+  } else if(days < 14){
+    summaryHtml = `<div class="period-summary short">⚠ Only ${days} day${days===1?'':'s'} — must be ≥ 14</div>`;
+  } else {
+    summaryHtml = `<div class="period-summary ok">✓ ${days} days — meets the 2-week minimum</div>`;
+  }
+
+  // Default exposure window suggestion = today + 7 → today + 21 (only if both empty)
+  const today = new Date();
+  const iso = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  const defStart = iso(new Date(today.getTime() + 7*86400000));
+  const defEnd   = iso(new Date(today.getTime() + 21*86400000));
+
+  // INM-specific callout (always shown; highlighted when INM is the current pick)
+  const inmActive = curType === 'inm';
+
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="tier-req-head">
+      <span>${escapeHtml(country)} · ${def.icon} ${escapeHtml(def.label)} — Tier Requirements</span>
+      <span style="margin-left:auto;font-size:11px;font-weight:500;opacity:.9">Auto-filled from STS Standard Config</span>
+    </div>
+    <div class="tier-req-body">
+      <div class="tier-req-card">
+        <div class="tier-req-card-title">💼 Hotel Commitment <span class="req">*</span></div>
+        ${commitHtml}
+      </div>
+      <div class="tier-req-card">
+        <div class="tier-req-card-title">🌏 Inbound Source Markets <span style="font-size:11px;color:var(--txt2);font-weight:500;letter-spacing:0;text-transform:none;margin-left:4px">${r.inbound.length} market${r.inbound.length===1?'':'s'}</span></div>
+        ${inboundHtml}
+      </div>
+
+      <div class="tier-req-card full">
+        <div class="tier-req-card-title">📅 Commitment Period <span class="req">*</span> <span style="font-size:11px;color:var(--txt2);font-weight:500;letter-spacing:0;text-transform:none;margin-left:4px">— Discount or INM, MM provides the dates · minimum <strong style="color:#92400E">2 weeks</strong></span></div>
+        <div class="period-grid">
+          <div class="period-field">
+            <label>Start Date</label>
+            <input type="date" id="su-commit-start" value="${escapeHtml(startDate || defStart)}" oninput="onCommitmentDateChange()">
+          </div>
+          <div class="period-field">
+            <label>End Date</label>
+            <input type="date" id="su-commit-end"   value="${escapeHtml(endDate   || defEnd)}"   oninput="onCommitmentDateChange()">
+          </div>
+          <div id="su-commit-summary">${summaryHtml}</div>
+        </div>
+        <div class="ferr hidden" id="su-commit-err" style="margin-top:8px">⚠ Commitment period must be at least 14 days. Please adjust the dates.</div>
+
+        <div class="inm-callout ${inmActive?'active':''}">
+          <span class="ic-icon">📨</span>
+          <div>
+            <strong>INM commitment requires manual setup by MM.</strong> After the hotel agrees, please configure INM in the system yourself, then take a screenshot of the configuration and email it to <a href="mailto:tina.chien@agoda.com">tina.chien@agoda.com</a> for the record.
+            ${inmActive ? `<div style="margin-top:5px;color:#92400E;font-weight:700">⚡ You picked INM above — please make sure to send the screenshot once setup is done.</div>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-req-card full">
+        <div class="tier-req-card-title">✅ Eligibility Criteria</div>
+        ${criteriaHtml}
+        ${restrictionHtml}
+      </div>
+    </div>
+  `;
+}
+
+function commitmentDays(start, end){
+  if(!start || !end) return 0;
+  const a = new Date(start), b = new Date(end);
+  if(isNaN(a) || isNaN(b)) return 0;
+  return Math.round((b - a) / 86400000) + 1;   // inclusive (e.g. May 1 → May 14 = 14 days)
+}
+
+function onCommitmentDateChange(){
+  // Re-evaluate validity + repaint the summary chip without re-rendering the whole panel
+  const start = document.getElementById('su-commit-start')?.value || '';
+  const end   = document.getElementById('su-commit-end')?.value   || '';
+  const days  = commitmentDays(start, end);
+  const sum   = document.getElementById('su-commit-summary');
+  if(sum){
+    if(!start || !end){
+      sum.innerHTML = `<div class="period-summary blank">📅 Pick start &amp; end dates</div>`;
+    } else if(days < 14){
+      sum.innerHTML = `<div class="period-summary short">⚠ Only ${days} day${days===1?'':'s'} — must be ≥ 14</div>`;
+    } else {
+      sum.innerHTML = `<div class="period-summary ok">✓ ${days} days — meets the 2-week minimum</div>`;
+    }
+  }
+  suValidate();
+}
+
+function suSetCommitment(type){
+  const country = document.getElementById('su-country').value;
+  const tier    = document.getElementById('su-tier').value;
+  const r       = tierRule(country, tier);
+  if(!r) return;
+  const opt = r.commitments.find(c => c.type === type);
+  if(!opt) return;
+  document.getElementById('su-elig-type').value = opt.type;
+  document.getElementById('su-elig-pct').value  = opt.pct;
+  document.querySelectorAll('.commit-opt').forEach(el => {
+    const radio = el.querySelector('input[type=radio]');
+    if(radio) el.classList.toggle('sel', radio.value === type);
+  });
+  suValidate();
+}
+
+function suSetIndep(v){
+  document.querySelectorAll('#su-indep-toggle button').forEach(b => b.classList.toggle('sel', b.dataset.indep === v));
+  document.getElementById('su-indep').value = v;
+  // Show/hide the bundle-sale note (required when independent === 'n' / bundle)
+  const wrap = document.getElementById('su-indep-note-wrap');
+  if(v === 'n') wrap.classList.add('visible');
+  else wrap.classList.remove('visible');
+  suValidate();
+}
+
+function suValidate(){
+  const v = id => document.getElementById(id).value.trim();
+  const setErr = (id, ok) => document.getElementById(id+'-err')?.classList.toggle('hidden', ok);
+
+  const mm  = v('su-mmemail');
+  const mmOk = /^[^\s@]+@agoda\.com$/i.test(mm);
+  setErr('su-mmemail', !mm || mmOk);
+
+  const cn  = v('su-name-cn');
+  const en  = v('su-name-en');
+  const hid = v('su-hid');
+  const hidOk = /^[0-9]+$/.test(hid);
+  setErr('su-hid', !hid || hidOk);
+
+  const bl  = parseFloat(v('su-bl'));
+  const blOk = !isNaN(bl) && bl >= 0 && bl <= 100;
+
+  const country = v('su-country');
+
+  const url = v('su-property-url');
+  const urlOk = /^https:\/\/www\.agoda\.com\//i.test(url);
+  setErr('su-property-url', !url || urlOk);
+
+  // Asset URL — now required
+  const asset = v('su-asset-url');
+  const assetOk = /^https:\/\//i.test(asset);
+  setErr('su-asset-url', !asset || assetOk);
+
+  // Video URL — optional, but if filled must be a valid https URL
+  const video = v('su-video-url');
+  const videoOk = !video || /^https:\/\//i.test(video);
+  setErr('su-video-url', videoOk);
+
+  const tier = v('su-tier');
+  setErr('su-tier', !!tier);
+
+  // Commitment is auto-filled from TIER_RULES — just verify it's actually set
+  const eligType = v('su-elig-type');
+  const eligPct  = parseFloat(v('su-elig-pct'));
+  const commitOk = !tier || (!!eligType && !isNaN(eligPct) && eligPct > 0);
+  setErr('su-elig-type', commitOk);
+
+  // Commitment period must be ≥ 14 days (only required once a tier is picked)
+  const cStart = document.getElementById('su-commit-start')?.value || '';
+  const cEnd   = document.getElementById('su-commit-end')?.value   || '';
+  const cDays  = commitmentDays(cStart, cEnd);
+  const periodOk = !tier || (!!cStart && !!cEnd && cDays >= 14);
+  setErr('su-commit', periodOk);
+
+  const indep = v('su-indep');
+  setErr('su-indep', !!indep);
+
+  let indepNoteOk = true;
+  if(indep === 'n'){
+    const indepNote = v('su-indep-note');
+    indepNoteOk = indepNote.length >= 3;
+    setErr('su-indep-note', indepNoteOk);
+  }
+
+  const allOk = mmOk && cn && en && hidOk && blOk && country
+    && urlOk && asset && assetOk && videoOk
+    && tier && commitOk && periodOk
+    && indep && indepNoteOk;
+  document.getElementById('su-submit').disabled = !allOk;
+  document.getElementById('su-hint').textContent = allOk
+    ? 'Looks good — ready to submit.'
+    : 'Fill in the required fields to enable submit.';
+  return allOk;
+}
+
+function suResetForm(){
+  document.getElementById('signup-form').reset();
+  document.getElementById('su-tier').value = '';
+  document.getElementById('su-indep').value = '';
+  document.getElementById('su-elig-type').value = '';
+  document.getElementById('su-elig-pct').value  = '';
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('#su-indep-toggle button').forEach(b => b.classList.remove('sel'));
+  document.getElementById('su-indep-note-wrap').classList.remove('visible');
+  // Reset tier grid + tier-requirements panel
+  document.getElementById('su-tier-grid').innerHTML =
+    `<div class="tier-empty" style="grid-column:1/-1;padding:18px;text-align:center;color:var(--txt2);font-size:12px;background:var(--bg);border:1px dashed var(--border);border-radius:9px">Tiers will appear here once you choose a country above. Each tier already carries its own commitment %, eligibility criteria and inbound source markets — you don't need to type them in.</div>`;
+  document.getElementById('su-tier-hint').textContent = '— select Country first to see the available tiers';
+  document.getElementById('su-tier-req').style.display = 'none';
+  document.getElementById('su-tier-req').innerHTML = '';
+  ['su-mmemail-err','su-hid-err','su-property-url-err','su-asset-url-err','su-video-url-err',
+   'su-tier-err','su-elig-type-err','su-commit-err','su-indep-err','su-indep-note-err']
+    .forEach(id => document.getElementById(id)?.classList.add('hidden'));
+  suValidate();
+}
+
+function resetSignupForm(){ suResetForm(); }
+
+function submitSignup(ev){
+  ev?.preventDefault();
+  if(!suValidate()){ toast('Please fix the highlighted errors first.', '⚠️'); return; }
+  const v = id => document.getElementById(id).value.trim();
+  const indep = v('su-indep');
+  const country = v('su-country');
+  const tier    = v('su-tier');
+  const rule    = tierRule(country, tier);
+  const newHotel = {
+    id: genId(),
+    hidCn: v('su-name-cn'),
+    hidEn: v('su-name-en'),
+    hid:   v('su-hid'),
+    bl:    parseFloat(v('su-bl')),
+    country: country,
+    tier:    tier,
+    independent: indep,
+    independentNote: indep === 'n' ? v('su-indep-note') : '',
+    eligibilityType: v('su-elig-type'),
+    eligibilityPct:  parseFloat(v('su-elig-pct')) || 0,
+    commitmentStart: document.getElementById('su-commit-start')?.value || '',
+    commitmentEnd:   document.getElementById('su-commit-end')?.value   || '',
+    inboundMarkets:  rule ? rule.inbound.slice() : [],
+    propertyUrl: v('su-property-url'),
+    assetUrl:    v('su-asset-url'),
+    videoUrl:    v('su-video-url'),
+    mmEmail:     v('su-mmemail'),
+    scheduledDate: v('su-scheduled'),
+    status: 'received',
+    note:   v('su-note'),
+    submittedAt: new Date().toISOString(),
+    precheckHistory: [],
+    statusHistory: [{ when:new Date().toISOString(), s:'received' }],
+  };
+  hotels.unshift(newHotel);
+  saveHotels();
+  updateSidebarCounts();
+  sheetsWrite(newHotel); // sync to Google Sheets
+  toast(`✅ ${newHotel.hidCn} signed up — appears in All Hotels.`);
+  suResetForm();
+  setTimeout(() => navigate('all-hotels'), 700);
+}
+
+// ══════════════════════════════════════════════════════════════
+// Boot
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  syncFromSheets(); // pull latest from Google Sheets on load
+});
+</script>
+</body>
+</html>
