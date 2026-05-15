@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SAVI — How It Works</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#E4202C;--blue:#2563EB;--blue-lt:#EFF6FF;
+  --navy:#1A1F36;--green:#33AC2E;--orange:#D97706;--purple:#8B5CF6;--teal:#00A5B5;
+  --txt:#1F2937;--txt2:#6B7280;--border:#E5E7EB;--bg:#F9FAFB;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);background:#fff;font-size:15px;line-height:1.6}
+
+/* ── Topbar ── */
+.topbar{background:var(--navy);color:#fff;padding:0 28px;height:54px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.logo-badge{background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:2px 9px;border-radius:5px;letter-spacing:.6px}
+.logo-name{font-size:15px;font-weight:600;letter-spacing:-.2px}
+.logo-sub{font-size:12px;color:rgba(255,255,255,.55);border-left:1px solid rgba(255,255,255,.2);padding-left:12px}
+.topbar-links{margin-left:auto;display:flex;gap:8px}
+.tl-btn{color:rgba(255,255,255,.7);font-size:12px;text-decoration:none;padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.2);transition:all .15s;white-space:nowrap}
+.tl-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.tl-btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,#F0F7FF 0%,#E8F4FF 60%,#F5F0FF 100%);
+  border-bottom:1px solid var(--border);padding:56px 28px 52px;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:#fff;
+  border:1px solid var(--border);border-radius:20px;padding:4px 14px;
+  font-size:12px;font-weight:600;color:var(--blue);margin-bottom:18px;letter-spacing:.3px}
+.hero h1{font-size:34px;font-weight:800;color:var(--navy);margin-bottom:12px;letter-spacing:-.8px;line-height:1.2}
+.hero h1 span{color:var(--blue)}
+.hero-sub{font-size:16px;color:var(--txt2);max-width:560px;margin:0 auto 28px;line-height:1.65}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1D4ED8}
+.btn-ghost{background:#fff;color:var(--txt);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+
+/* ── Problem banner ── */
+.problem-bar{background:#FFF7ED;border-bottom:1px solid #FDE68A;padding:18px 28px;display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;gap:24px}
+.pb-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#92400E}
+.pb-item strong{font-weight:700}
+
+/* ── Section ── */
+.section{padding:56px 28px;max-width:900px;margin:0 auto}
+.section-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:10px}
+.section h2{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:-.5px}
+.section-sub{font-size:15px;color:var(--txt2);margin-bottom:36px;max-width:600px}
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ── Flow overview ── */
+.flow-row{display:flex;align-items:flex-start;gap:0;margin-bottom:0}
+.flow-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.flow-step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:20px;
+  font-size:18px;color:#D1D5DB;font-weight:300}
+.flow-num{width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+  margin:0 auto 10px;flex-shrink:0}
+.flow-label{font-size:12px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.flow-desc{font-size:11px;color:var(--txt2);line-height:1.45;padding:0 6px}
+.flow-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-bottom:8px;display:inline-block}
+.ft-kol{background:#FEF3C7;color:#92400E}
+.ft-mm{background:#DBEAFE;color:#1D4ED8}
+.ft-admin{background:#D1FAE5;color:#065F46}
+.ft-auto{background:#F3E8FF;color:#6D28D9}
+
+/* ── Role cards ── */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+.role-card{border:1.5px solid var(--border);border-radius:14px;padding:22px 18px;transition:all .15s}
+.role-card:hover{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.rc-icon{font-size:28px;margin-bottom:12px}
+.rc-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  padding:2px 9px;border-radius:10px;margin-bottom:10px;display:inline-block}
+.rc-kol{background:#FEF3C7;color:#92400E}
+.rc-mm{background:#DBEAFE;color:#1D4ED8}
+.rc-admin{background:#D1FAE5;color:#065F46}
+.rc-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.rc-desc{font-size:13px;color:var(--txt2);line-height:1.55;margin-bottom:14px}
+.rc-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;
+  color:var(--blue);text-decoration:none;padding:6px 12px;background:var(--blue-lt);
+  border-radius:7px;transition:background .15s}
+.rc-link:hover{background:#DBEAFE}
+
+/* ── Step-by-step per role ── */
+.role-section{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.rs-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.rs-header:hover{background:var(--bg)}
+.rs-icon{font-size:22px}
+.rs-title{font-size:15px;font-weight:700;color:var(--navy)}
+.rs-sub{font-size:12px;color:var(--txt2);margin-top:1px}
+.rs-badge{margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:10px}
+.rs-toggle{font-size:18px;color:var(--txt2);margin-left:8px;transition:transform .2s}
+.rs-body{padding:0 20px 20px;display:none}
+.rs-body.open{display:block}
+.steps-list{display:flex;flex-direction:column;gap:0}
+.sl-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);position:relative}
+.sl-item:last-child{border-bottom:none}
+.sl-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.sl-content{flex:1}
+.sl-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.sl-desc{font-size:12px;color:var(--txt2);line-height:1.55}
+.sl-url{font-size:11px;color:var(--blue);background:var(--blue-lt);padding:3px 8px;
+  border-radius:5px;display:inline-block;margin-top:5px;font-family:monospace}
+.sl-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;margin-top:4px;display:inline-block}
+.tag-ai{background:#F3E8FF;color:#6D28D9}
+.tag-auto{background:#D1FAE5;color:#065F46}
+.tag-new{background:#FEE2E2;color:#B91C1C}
+
+/* ── Data flow ── */
+.data-flow{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:28px}
+.df-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.df-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.df-row:last-child{margin-bottom:0}
+.df-node{background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 12px;
+  font-size:12px;font-weight:500;color:var(--txt);white-space:nowrap}
+.df-node.blue{background:var(--blue-lt);border-color:#BFDBFE;color:var(--blue)}
+.df-node.green{background:#F0FDF4;border-color:#86EFAC;color:#166534}
+.df-node.orange{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
+.df-node.purple{background:#F3E8FF;border-color:#DDD6FE;color:#6D28D9}
+.df-arrow{color:#9CA3AF;font-size:16px}
+
+/* ── FAQ ── */
+.faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+.faq-q{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:6px;display:flex;align-items:flex-start;gap:8px}
+.faq-q::before{content:'Q';background:var(--blue);color:#fff;font-size:10px;font-weight:800;
+  padding:1px 6px;border-radius:4px;margin-top:2px;flex-shrink:0}
+.faq-a{font-size:13px;color:var(--txt2);line-height:1.6;padding-left:24px}
+
+/* ── Footer ── */
+.footer{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;
+  padding:28px;font-size:12px}
+.footer strong{color:#fff}
+
+/* Responsive */
+@media(max-width:640px){
+  .role-grid{grid-template-columns:1fr}
+  .flow-row{flex-direction:column;gap:16px}
+  .flow-step::after{display:none}
+  .hero h1{font-size:24px}
+  .topbar-links .tl-btn:not(.primary){display:none}
+  .problem-bar{flex-direction:column;gap:10px;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="logo-badge">SAVI</span>
+  <span class="logo-name">Supply AI Intake</span>
+  <span class="logo-sub">Agoda Creator Program</span>
+  <div class="topbar-links">
+    <a class="tl-btn" href="kol-ext.html" target="_blank">KOL Form ↗</a>
+    <a class="tl-btn" href="kol-mm.html" target="_blank">MM Workspace ↗</a>
+    <a class="tl-btn primary" href="kol-admin.html" target="_blank">Admin Portal ↗</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">✨ Quick Tour — 3 min read</div>
+  <h1>One system.<br><span>Three roles. Zero re-entry.</span></h1>
+  <p class="hero-sub">SAVI connects KOLs, Market Managers, and the Supply team in one intake flow — so every submission arrives complete, validated, and ready to action.</p>
+  <div class="hero-btns">
+    <a class="btn btn-primary" href="kol-admin.html" target="_blank">Open Admin Portal →</a>
+    <a class="btn btn-ghost" href="kol-ext.html" target="_blank">See KOL Form</a>
+  </div>
+</section>
+
+<!-- Problem bar -->
+<div class="problem-bar">
+  <div class="pb-item">😩 <strong>Before SAVI:</strong> emails back-and-forth for missing info</div>
+  <div class="pb-item">📋 Manual copy-paste between forms and spreadsheets</div>
+  <div class="pb-item">⏳ Days lost to incomplete submissions and reformatting</div>
+</div>
+
+<!-- Overview flow -->
+<section class="section">
+  <div class="section-eyebrow">How it works</div>
+  <h2>The end-to-end flow</h2>
+  <p class="section-sub">From KOL application to confirmed deliverables — everything moves through SAVI automatically.</p>
+
+  <div class="flow-row">
+    <div class="flow-step">
+      <span class="flow-tag ft-kol">KOL</span>
+      <div class="flow-num">1</div>
+      <div class="flow-label">KOL applies</div>
+      <div class="flow-desc">Fills out travel plan & content proposal via public form</div>
+    </div>
+    <div class="flow-step">
+      <span class="flow-tag ft-auto">Auto</span>
+      <div class="flow-num">2</div>
+      <div class="flow-label">Data syncs</div>
+      <div class="flow-desc">Submission saved & visible to MM instantly — no forwarding</div>
+    </div>
+    <div class="flow-step">
+      <span class="flow-tag ft-mm">MM</span>
+      <div class="flow-num">3</div>
+      <div class="flow-label">MM matches hotel</div>
+      <div class="flow-desc">Opens MM Workspace, picks KOL plan, fills hotel + eligibility</div>
+    </div>
+    <div class="flow-step">
+      <span class="flow-tag ft-admin">Admin</span>
+      <div class="flow-num">4</div>
+      <div class="flow-label">Admin confirms</div>
+      <div class="flow-desc">Reviews match, confirms deliverables, notifies KOL & MM</div>
+    </div>
+    <div class="flow-step">
+      <span class="flow-tag ft-auto">Auto</span>
+      <div class="flow-num">5</div>
+      <div class="flow-label">Handoff emails</div>
+      <div class="flow-desc">One click copies structured handoff email — no reformatting</div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- Role cards -->
+<section class="section">
+  <div class="section-eyebrow">Three roles, three entry points</div>
+  <h2>Who uses what</h2>
+  <p class="section-sub">Each role gets their own URL. No login needed for KOLs. No wrong form to fill.</p>
+
+  <div class="role-grid">
+    <div class="role-card">
+      <div class="rc-icon">🎬</div>
+      <span class="rc-tag rc-kol">KOL / Creator</span>
+      <div class="rc-title">KOL Application Form</div>
+      <div class="rc-desc">Travel creators fill in their profile, upcoming trip details, and content plan. AI validates fields before submission can go through.</div>
+      <a class="rc-link" href="kol-ext.html" target="_blank">Open KOL Form ↗</a>
+    </div>
+    <div class="role-card">
+      <div class="rc-icon">📊</div>
+      <span class="rc-tag rc-mm">Market Manager</span>
+      <div class="rc-title">MM Workspace</div>
+      <div class="rc-desc">MMs match incoming KOL plans to hotel partners, or submit new hotel-initiated sponsor requests. KOL data auto-populates — no re-typing.</div>
+      <a class="rc-link" href="kol-mm.html" target="_blank">Open MM Workspace ↗</a>
+    </div>
+    <div class="role-card">
+      <div class="rc-icon">⚙️</div>
+      <span class="rc-tag rc-admin">Admin / Supply Team</span>
+      <div class="rc-title">Admin Portal</div>
+      <div class="rc-desc">Full pipeline view — hotel requests, KOL applications, matched plans, deliverables tracking, and Ambassador applications. One-click notification emails.</div>
+      <a class="rc-link" href="kol-admin.html" target="_blank">Open Admin Portal ↗</a>
+    </div>
+  </div>
+
+  <!-- Data flow -->
+  <div class="data-flow">
+    <div class="df-title">🔄 How data flows between roles</div>
+    <div class="df-row">
+      <div class="df-node blue">KOL fills kol-ext.html</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node purple">Saved to Google Sheets</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node orange">MM sees it in kol-mm.html</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node green">Admin sees it in kol-admin.html</div>
+    </div>
+    <div class="df-row">
+      <div class="df-node orange">MM submits hotel match</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node purple">Saved to Google Sheets</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node green">Appears in Admin → Match Plans</div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- Step by step per role -->
+<section class="section">
+  <div class="section-eyebrow">Step by step</div>
+  <h2>Detailed walkthroughs</h2>
+  <p class="section-sub">Click each role to expand the full step-by-step flow.</p>
+
+  <!-- KOL -->
+  <div class="role-section">
+    <div class="rs-header" onclick="toggle('kol')">
+      <span class="rs-icon">🎬</span>
+      <div>
+        <div class="rs-title">KOL / Creator — applying for sponsorship</div>
+        <div class="rs-sub">Uses: kol-ext.html (public, shareable)</div>
+      </div>
+      <span class="rs-badge" style="background:#FEF3C7;color:#92400E">3 steps</span>
+      <span class="rs-toggle" id="toggle-kol">▾</span>
+    </div>
+    <div class="rs-body" id="body-kol">
+      <div class="steps-list">
+        <div class="sl-item">
+          <div class="sl-num" style="background:#D97706">1</div>
+          <div class="sl-content">
+            <div class="sl-title">Creator profile</div>
+            <div class="sl-desc">Fill in name, nationality, contact email, and select social platforms (Instagram, TikTok, YouTube, XHS, etc.). Enter follower count and profile URL per platform. Confirm you've read the program requirements — this is a required checkbox before proceeding.</div>
+            <span class="sl-tag tag-ai">AI validates email format & URL</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#D97706">2</div>
+          <div class="sl-content">
+            <div class="sl-title">Travel details</div>
+            <div class="sl-desc">Select target region and city, enter travel dates and number of guests. Optionally add flight info (airline, flight number, arrival time). An eligibility reminder shows the partnership criteria for the target market — the KOL sees this before submitting.</div>
+            <span class="sl-tag tag-ai">AI checks date format & region</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#D97706">3</div>
+          <div class="sl-content">
+            <div class="sl-title">Content plan & submit</div>
+            <div class="sl-desc">Describe the planned content — e.g. "1 × Reel + 3 × Stories + 1 × Feed post". Add any notes (dietary requirements, etc.). Hit Submit — a reference number is generated and the submission is saved to Google Sheets automatically.</div>
+            <span class="sl-tag tag-auto">Auto-syncs to Sheets → MM sees it instantly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MM Flow A -->
+  <div class="role-section">
+    <div class="rs-header" onclick="toggle('mm-a')">
+      <span class="rs-icon">🚀</span>
+      <div>
+        <div class="rs-title">Market Manager — Flow A: Match a KOL to a hotel</div>
+        <div class="rs-sub">Uses: kol-mm.html → KOL Applications (sidebar)</div>
+      </div>
+      <span class="rs-badge" style="background:#DBEAFE;color:#1D4ED8">3 steps</span>
+      <span class="rs-toggle" id="toggle-mm-a">▾</span>
+    </div>
+    <div class="rs-body" id="body-mm-a">
+      <div class="steps-list">
+        <div class="sl-item">
+          <div class="sl-num" style="background:#2563EB">1</div>
+          <div class="sl-content">
+            <div class="sl-title">Browse & select KOL applications</div>
+            <div class="sl-desc">Open MM Workspace and click "KOL Applications" in the sidebar. See all incoming applications synced from Google Sheets, filterable by region. Select one or multiple KOL plans to match together, then click "Start Hotel Matching".</div>
+            <span class="sl-tag tag-auto">KOL data pre-filled — no re-typing</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#2563EB">2</div>
+          <div class="sl-content">
+            <div class="sl-title">Fill hotel & eligibility details</div>
+            <div class="sl-desc">Enter the matched hotel name, HID, Agoda URL, and BL%. Set the Agoda eligibility commitment (Discount % or INM %). Then fill in the KOL-facing sponsor package — sponsored room type, extras (breakfast, social bar), and content deliverables.</div>
+            <span class="sl-tag tag-ai">AI validates HID format & URL</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#2563EB">3</div>
+          <div class="sl-content">
+            <div class="sl-title">Review & submit to Admin</div>
+            <div class="sl-desc">Review the full match summary — KOL profile, hotel details, eligibility, and sponsor package. Submit and it immediately appears in the Admin Portal under "Match Plans" for confirmation.</div>
+            <span class="sl-tag tag-auto">Syncs to Admin → Match Plans instantly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MM Flow B -->
+  <div class="role-section">
+    <div class="rs-header" onclick="toggle('mm-b')">
+      <span class="rs-icon">🏨</span>
+      <div>
+        <div class="rs-title">Market Manager — Flow B: Hotel wants to sponsor a KOL</div>
+        <div class="rs-sub">Uses: kol-mm.html → Hotel Sponsor Form (sidebar)</div>
+      </div>
+      <span class="rs-badge" style="background:#DBEAFE;color:#1D4ED8">1 form</span>
+      <span class="rs-toggle" id="toggle-mm-b">▾</span>
+    </div>
+    <div class="rs-body" id="body-mm-b">
+      <div class="steps-list">
+        <div class="sl-item">
+          <div class="sl-num" style="background:#2563EB">1</div>
+          <div class="sl-content">
+            <div class="sl-title">Submit a Hotel Sponsor Request</div>
+            <div class="sl-desc">A hotel partner wants to sponsor a KOL stay, but no specific creator is assigned yet. MM fills one single-page form: hotel info (HID, BL%), Agoda eligibility commitment, KOL-facing sponsor package (room, extras), and optionally a voucher giveaway block for KOL audience promotions.</div>
+            <span class="sl-tag tag-auto">Appears in Admin → Hotel Requests for KOL mapping</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div class="role-section">
+    <div class="rs-header" onclick="toggle('admin')">
+      <span class="rs-icon">⚙️</span>
+      <div>
+        <div class="rs-title">Admin / Supply Team — managing the full pipeline</div>
+        <div class="rs-sub">Uses: kol-admin.html (your portal)</div>
+      </div>
+      <span class="rs-badge" style="background:#D1FAE5;color:#065F46">5 sections</span>
+      <span class="rs-toggle" id="toggle-admin">▾</span>
+    </div>
+    <div class="rs-body" id="body-admin">
+      <div class="steps-list">
+        <div class="sl-item">
+          <div class="sl-num" style="background:#059669">1</div>
+          <div class="sl-content">
+            <div class="sl-title">Hotel Requests — review hotel-initiated sponsorships</div>
+            <div class="sl-desc">See all sponsor requests submitted by MMs on behalf of hotels. Each request shows HID, BL%, proposed KOL sponsor package, and eligibility commitment. Map a suitable KOL from the application pool to complete the match.</div>
+            <span class="sl-tag" style="background:#FEF3C7;color:#92400E">From: MM Flow B</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#059669">2</div>
+          <div class="sl-content">
+            <div class="sl-title">KOL Applications — browse the incoming pool</div>
+            <div class="sl-desc">Read-only view of all KOL applications synced from Google Sheets. Filter by region, platform, or status. Use this to manually identify creators for hotel requests.</div>
+            <span class="sl-tag" style="background:#FEF3C7;color:#92400E">From: KOL kol-ext.html submissions</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#059669">3</div>
+          <div class="sl-content">
+            <div class="sl-title">Match Plans — confirm and notify</div>
+            <div class="sl-desc">The main action screen. See all matched plans from MMs. For each match: confirm deliverables (content format + deadline), then click "Notify KOL" — a pre-drafted personalised email is copied to clipboard, addressed to the KOL's email. Once deliverables are confirmed, click "Notify MM" to copy the full handoff email addressed to the MM.</div>
+            <span class="sl-tag tag-auto">Emails pre-drafted & addressed automatically</span>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#059669">4</div>
+          <div class="sl-content">
+            <div class="sl-title">Deliverables Tracking — monitor content submissions</div>
+            <div class="sl-desc">Track all confirmed collaborations and their content delivery status. Update status as content is submitted by creators. Useful for QBR reporting and follow-up.</div>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num" style="background:#059669">5</div>
+          <div class="sl-content">
+            <div class="sl-title">Ambassador Applications — separate program intake</div>
+            <div class="sl-desc">Applications from the kol-ambassador.html form land here. These are creators applying for the commission-based Ambassador program (distinct from the Creator / sponsorship program).</div>
+            <span class="sl-tag" style="background:#FEF3C7;color:#92400E">From: kol-ambassador.html</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-eyebrow">FAQ</div>
+  <h2>Common questions</h2>
+  <p class="section-sub"></p>
+
+  <div class="faq-item">
+    <div class="faq-q">Do KOLs need to create an account?</div>
+    <div class="faq-a">No. kol-ext.html is fully public — just share the link. No login, no account setup.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">If a KOL submits on their phone, can the MM see it on their computer?</div>
+    <div class="faq-a">Yes. Data is synced to Google Sheets in real time, so any device can see the latest submissions as long as there's an internet connection.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What's the difference between Flow A and Flow B in MM Workspace?</div>
+    <div class="faq-a">Flow A = a KOL submitted first, and the MM finds a hotel to match them. Flow B = a hotel reached out first wanting to sponsor a creator, and Admin will find a suitable KOL from the pool.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What does "Notify KOL" do in the Admin portal?</div>
+    <div class="faq-a">It generates a personalised email (with the KOL's name, hotel, dates, and proposed package) and copies it to your clipboard — already addressed to the KOL's email. You just paste and send.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What's the Ambassador form for?</div>
+    <div class="faq-a">kol-ambassador.html is a separate intake for creators applying to the commission-based Ambassador Program — different from the sponsored-stay Creator Program. Both land in the Admin portal under their respective sections.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Can I update the form fields or add new categories?</div>
+    <div class="faq-a">Yes — the HTML files are in GitHub. Make changes there and Vercel will redeploy automatically within 1–2 minutes.</div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div class="footer">
+  Built for <strong>Agoda Supply / GC Marketing</strong> · SAVI v1 · Hackathon 2026 ·
+  <a href="kol-admin.html" style="color:#93C5FD">Admin Portal</a> ·
+  <a href="kol-mm.html" style="color:#93C5FD">MM Workspace</a> ·
+  <a href="kol-ext.html" style="color:#93C5FD">KOL Form</a>
+</div>
+
+<script>
+function toggle(id) {
+  const body = document.getElementById('body-' + id);
+  const tog = document.getElementById('toggle-' + id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  tog.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+</script>
+</body>
+</html>
