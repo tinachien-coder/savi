@@ -480,6 +480,10 @@ body:not(.locked) .read-only-only{display:none!important}
       <span>All Hotels</span>
       <span class="sb-pill" id="sb-all-count">0</span>
     </div>
+    <div class="sb-item" onclick="navigate('all-hotels')" style="padding-left:28px;margin-top:1px;cursor:pointer">
+      <span style="font-size:11px;color:var(--txt2)">⏳ Precheck this week</span>
+      <span class="sb-pill unread" id="sb-precheck-count" style="display:none">0</span>
+    </div>
     <div class="sb-item" id="sb-signup" onclick="navigate('signup')">
       <span class="sb-dot" style="background:var(--green)"></span>
       <span>STS Signup</span>
@@ -706,6 +710,7 @@ body:not(.locked) .read-only-only{display:none!important}
                 <div class="flabel">BL% <span class="req">*</span> <span class="flabel-hint">(business level, percentage)</span></div>
                 <div class="finput-suffix-wrap">
                   <input class="finput" id="su-bl" type="text" inputmode="decimal" placeholder="e.g. 8.5" oninput="suValidate()" required>
+                  <div id="su-bl-warn" style="display:none;font-size:11px;color:#D97706;margin-top:4px;padding:4px 8px;background:#FFFBEB;border-radius:5px;border:1px solid #FDE68A">⚠ This looks like a percentage — STS uses decimal format. e.g. enter <strong>0.085</strong> not <strong>8.5</strong></div>
                   <span class="finput-suffix">%</span>
                 </div>
               </div>
@@ -837,7 +842,11 @@ const STORAGE_KEY     = 'hotel_signup_hotels_v2';   // bumped — schema changed
 const SEED_FLAG_KEY   = 'hotel_signup_seeded_v2';
 const READ_KEY        = 'hotel_signup_read_v2';
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSqS9soay85vDIjSDbOVS6e5TQd2JxCsGnEdWBqf7EXzB9Mm5SR2TD0mb-YOW24BJbzw/exec'; // ← paste after deploying Apps Script
-const EDIT_PASSWORD   = 'savi2026';
+const EDIT_PASSWORD_HASH = '73e46212c7dc629f7afb7996852ee8a0e11c7e3379543f4d3b2402afa3fb1a1f'; // SHA-256 of the editor password
+async function checkPassword(input){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('') === EDIT_PASSWORD_HASH;
+}
 const MARKET_CAP      = 96;           // inbound slot cap per market per month (from Inbound_Cap_Config sheet)
 
 // Markets (HK + MO consolidated into a single "HKMO" market per ops setup)
@@ -1344,12 +1353,13 @@ async function syncFromSheets() {
 // ══════════════════════════════════════════════════════════════
 // Mode toggle (read-only ↔ editor with password)
 // ══════════════════════════════════════════════════════════════
-function switchMode(mode){
+async function switchMode(mode){
   if(mode === 'editor'){
     if(document.body.classList.contains('locked') === false) return;
     const pw = prompt('Editor mode requires a password. Please enter the admin password:');
     if(pw === null) return;
-    if(pw !== EDIT_PASSWORD){
+    const pwMatch = await checkPassword(pw);
+    if(!pwMatch){
       toast('Wrong password — staying in read-only mode.', '🚫');
       return;
     }
@@ -1696,6 +1706,22 @@ function updateSidebarCounts(){
   elU.textContent = unread;
   elU.classList.toggle('hidden', unread === 0);
   document.getElementById('sb-all-count').textContent = hotels.length;
+
+  // Precheck this week — hotels with status received or pending_precheck
+  // that have a scheduled date within the next 7 days (or no date set)
+  const now = new Date();
+  const in7 = new Date(now); in7.setDate(now.getDate() + 7);
+  const needsPrecheck = hotels.filter(h => {
+    if(!['received','pending_precheck'].includes(h.status)) return false;
+    if(!h.scheduledDate) return true; // no date = always show
+    const d = new Date(h.scheduledDate);
+    return d >= now && d <= in7;
+  });
+  const elP = document.getElementById('sb-precheck-count');
+  if(elP){
+    elP.textContent = needsPrecheck.length;
+    elP.style.display = needsPrecheck.length > 0 ? '' : 'none';
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2657,6 +2683,9 @@ function suValidate(){
 
   const bl  = parseFloat(v('su-bl'));
   const blOk = !isNaN(bl) && bl >= 0 && bl <= 100;
+  const blLooksLikePct = !isNaN(bl) && bl > 1; // values > 1 are almost certainly % not decimal
+  const blWarnEl = document.getElementById('su-bl-warn');
+  if(blWarnEl) blWarnEl.style.display = (blLooksLikePct && bl <= 100) ? 'block' : 'none';
 
   const country = v('su-country');
 

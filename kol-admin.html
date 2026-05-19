@@ -594,11 +594,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 </div>
 <script>
 (function(){
-  const PW = 'savi2026';
+  const PW_HASH = '73e46212c7dc629f7afb7996852ee8a0e11c7e3379543f4d3b2402afa3fb1a1f'; // SHA-256, no plaintext in source
   const KEY = 'savi_admin_auth';
-  function checkPW(){
+  async function checkPW(){
     const val = document.getElementById('pw-input').value;
-    if(val === PW){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
+    const hash = Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash === PW_HASH){
       sessionStorage.setItem(KEY,'1');
       document.getElementById('pw-gate').style.display='none';
     } else {
@@ -646,6 +648,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
       <span class="sb-dot" style="background:#F97316"></span>
       <span>Deliverables Tracking</span>
       <span class="sb-pill" id="sb-deliverables-count">0</span>
+    </div>
+    <div class="sb-item" onclick="navigate('matched-plans')" style="padding-left:28px;margin-top:1px;cursor:pointer">
+      <span style="font-size:11px;color:var(--txt2)">⏳ Precheck this week</span>
+      <span class="sb-pill unread" id="sb-kol-precheck-count" style="display:none">0</span>
     </div>
 
     <div class="sb-label">Ambassador</div>
@@ -1291,6 +1297,22 @@ function updateSidebarCounts(){
     const hrApps = loadHotelRequests();
     const sbHr = document.getElementById('sb-hotel-requests-count');
     if(sbHr) sbHr.textContent = hrApps.length;
+
+    // Precheck this week — matched plans with publish deadline within 7 days
+    const now = new Date();
+    const in7 = new Date(now); in7.setDate(now.getDate() + 7);
+    const plans = buildMatchedPlans();
+    const precheckDue = plans.filter(p => {
+      const c = matchConfirmedDetails[p.id];
+      if(!c || !c.deadline) return false;
+      const d = new Date(c.deadline);
+      return d >= now && d <= in7;
+    });
+    const elP = document.getElementById('sb-kol-precheck-count');
+    if(elP){
+      elP.textContent = precheckDue.length;
+      elP.style.display = precheckDue.length > 0 ? '' : 'none';
+    }
   } catch(e){}
 }
 
