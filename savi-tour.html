@@ -151,7 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
 <nav class="topbar">
   <span class="logo-badge">SAVI</span>
   <span class="logo-name">SAVI</span>
-  <span class="logo-sub">Creator Program Portal</span>
+  <span class="logo-sub">Supply AI Intake</span>
   <div class="topbar-links">
     <a class="tl-btn" href="kol-ext.html" target="_blank">KOL Form ↗</a>
     <a class="tl-btn" href="kol-mm.html" target="_blank">MM Workspace ↗</a>
@@ -163,26 +163,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
 <!-- Hero -->
 <section class="hero">
   <div class="hero-eyebrow">✨ Quick Tour — 3 min read</div>
-  <h1>SAVI — Creator Program Portal</h1>
-  <p class="hero-sub">SAVI connects KOLs, Market Managers, and the Supply team in one intake flow — so every submission arrives complete, validated, and ready to action.</p>
+  <h1>SAVI — Supply AI Intake</h1>
+  <p class="hero-sub">SAVI replaces email and spreadsheets with one structured system for two programs — the KOL Creator Program and Social Total Solution (STS). Built for the SEAGC RMO team.</p>
   <div class="hero-btns">
     <a class="btn btn-primary" href="kol-admin.html" target="_blank">Open Admin Portal →</a>
-    <a class="btn btn-ghost" href="kol-ext.html" target="_blank">See KOL Form</a>
+    <a class="btn btn-ghost" href="sts-signup.html" target="_blank">STS Signup Tool</a>
   </div>
 </section>
 
 <!-- Problem bar -->
 <div class="problem-bar">
-  <div class="pb-item">😩 <strong>Before SAVI:</strong> emails back-and-forth for missing info</div>
-  <div class="pb-item">📋 Manual copy-paste between forms and spreadsheets</div>
-  <div class="pb-item">⏳ Days lost to incomplete submissions and reformatting</div>
+  <div class="pb-item">😩 <strong>Before SAVI:</strong> KOL matching done via email chains and shared Excel</div>
+  <div class="pb-item">📋 Hotel STS signups scattered across 4 country Excel tabs, no real-time visibility</div>
+  <div class="pb-item">⏳ Precheck, slot tracking, and status updates all done manually every week</div>
 </div>
 
 <!-- Overview flow -->
 <section class="section">
   <div class="section-eyebrow">How it works</div>
-  <h2>The end-to-end flow</h2>
-  <p class="section-sub">From KOL application to confirmed deliverables — everything moves through SAVI automatically.</p>
+  <h2>Two programs, one system</h2>
+  <p class="section-sub">KOL Creator Program handles influencer matching end-to-end. Social Total Solution manages hotel enrollment, D-3 precheck, and social publishing — all in the same place.</p>
 
   <div class="flow-row">
     <div class="flow-step">
@@ -247,10 +247,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
       <div class="rc-desc">Full pipeline view — hotel requests, KOL applications, matched plans, deliverables tracking, and Ambassador applications. One-click notification emails.</div>
       <a class="rc-link" href="kol-admin.html" target="_blank">Open Admin Portal ↗</a>
     </div>
-    <div class="rc-card">
-      <div class="rc-tag rc-admin">Admin / Supply Team</div>
+    <div class="role-card">
+      <div class="rc-icon">🏨</div>
+      <span class="rc-tag rc-admin">Admin + Market Manager</span>
       <div class="rc-title">STS Signup Tool</div>
-      <div class="rc-desc">Hotel signup management for Social Total Solution — precheck workflow, slot tracking, by-country summary.</div>
+      <div class="rc-desc">Hotels commit discounts or INM for cross-border social exposure. MMs submit signups, Admin runs D-3 precheck every Friday. Dashboard shows slot usage, BL% by country, and campaign status in real time.</div>
       <a class="rc-link" href="sts-signup.html" target="_blank">Open STS Signup ↗</a>
     </div>
   </div>
@@ -273,6 +274,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
       <div class="df-node purple">Saved to Google Sheets</div>
       <div class="df-arrow">→</div>
       <div class="df-node green">Appears in Admin → Match Plans</div>
+    </div>
+    <div class="df-row">
+      <div class="df-node orange">MM submits STS signup</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node green">Admin precheck every Friday</div>
+      <div class="df-arrow">→</div>
+      <div class="df-node blue">Published Mon / Wed / Fri</div>
     </div>
   </div>
 </section>
@@ -466,6 +474,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
 
     </div>
   </div>
+
+  <!-- STS -->
+  <div class="role-section">
+    <div class="rs-header" onclick="toggle('sts')">
+      <span class="rs-icon">🏨</span>
+      <div>
+        <div class="rs-title">Social Total Solution (STS) — hotel enrollment &amp; precheck</div>
+        <div class="rs-sub">Uses: sts-signup.html (MM submits · Admin manages)</div>
+      </div>
+      <span class="rs-badge" style="background:#EEF2FF;color:#3730A3">3 steps</span>
+      <span class="rs-toggle" id="toggle-sts">▾</span>
+    </div>
+    <div class="rs-body" id="body-sts">
+      <div class="steps-list">
+        <div class="sl-item">
+          <div class="sl-num">1</div>
+          <div class="sl-content">
+            <div class="sl-title">MM submits hotel signup</div>
+            <div class="sl-desc">Opens sts-signup.html → Signup Form. Fills hotel HID, tier, commitment type (Discount or INM), BL%, photo/video assets, and expected publish date. Tier selection auto-shows the commitment % and which inbound markets the hotel will be exposed to.</div>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num">2</div>
+          <div class="sl-content">
+            <div class="sl-title">Admin runs D-3 precheck</div>
+            <div class="sl-desc">Every Friday, Admin checks hotels scheduled for the coming week and runs L3D PrePA PVAR precheck. Pass → status set to Confirmed, MM notified. Fail → MM notified with reason, hotel re-enters next slot.</div>
+          </div>
+        </div>
+        <div class="sl-item">
+          <div class="sl-num">3</div>
+          <div class="sl-content">
+            <div class="sl-title">Hotel goes live</div>
+            <div class="sl-desc">Confirmed hotels published Mon / Wed / Fri across TW, HK, CN, SG, SEA platforms. Dashboard shows inbound slot usage (cap: 96 per market/month), BL% by country and quarter, and all campaign statuses in real time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <hr class="divider">
 
@@ -487,6 +533,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
     <div class="faq-q">What's the difference between Flow A and Flow B in MM Workspace?</div>
     <div class="faq-a">Flow A = a KOL submitted first, and the MM finds a hotel to match them. Flow B = a hotel reached out first wanting to sponsor a creator, and Admin will find a suitable KOL from the pool.</div>
   </div>
+  <div class="faq-item">
+    <div class="faq-q">What is STS and how is it different from the KOL program?</div>
+    <div class="faq-a">STS (Social Total Solution) is a separate program where hotels commit a discount or INM in exchange for cross-border social media exposure. Unlike the KOL program (which involves individual creators), STS is managed directly between MMs and Admin — no external KOL application required.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What does "precheck" mean in STS?</div>
+    <div class="faq-a">D-3 precheck is Admin verifying that the hotel's Agoda pricing is live and matches the committed discount, 3 days before the scheduled publish date. If pricing isn't live or doesn't match, the hotel fails precheck and must resubmit for the next publishing slot.</div>
+  </div>
 
 
 
@@ -494,10 +548,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:va
 
 <!-- Footer -->
 <div class="footer">
-  Built for <strong>Agoda Supply / GC Marketing</strong> · SAVI — Creator Program Portal · 2026 ·
+  Built for <strong>Agoda Supply / GC Marketing</strong> · SAVI — Supply AI Intake · 2026 ·
   <a href="kol-admin.html" style="color:#93C5FD">Admin Portal</a> ·
   <a href="kol-mm.html" style="color:#93C5FD">MM Workspace</a> ·
-  <a href="kol-ext.html" style="color:#93C5FD">KOL Form</a>
+  <a href="kol-ext.html" style="color:#93C5FD">KOL Form</a> ·
+  <a href="sts-signup.html" style="color:#93C5FD">STS Signup</a>
 </div>
 
 <script>
